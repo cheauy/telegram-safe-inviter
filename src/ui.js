@@ -4,7 +4,7 @@ export const UI_HTML = `<!DOCTYPE html>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Tenh Gram · Telegram Safe Inviter</title>
-<meta name="theme-color" content="#0d6b8e" />
+<meta name="theme-color" content="#16537e" />
 <meta name="application-name" content="Tenh Gram" />
 <meta name="apple-mobile-web-app-title" content="Tenh Gram" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -18,14 +18,17 @@ export const UI_HTML = `<!DOCTYPE html>
 <style>
   :root{
     --bg:#ffffff;
-    --canvas:#f5f7fb;
-    --line:#e4eaf1;
-    --line-strong:#cbd5e1;
-    --text:#0f172a;
-    --text-2:#475569;
-    --muted:#7c8ba1;
+    --canvas:#f4f6f9;
+    --line:#e3e8ef;
+    --line-strong:#c9d2de;
+    --text:#0b1220;
+    --text-2:#4b5a6e;
+    --muted:#7a8aa0;
+    --text-3:#94a3b8;
     --brand:#16537e;
-    --brand-hover:#16537e;
+    --brand-hover:#0e4568;
+    --brand-600:#0f4a73;
+    --brand-700:#0d3f61;
     --brand-50:#eef5fa;
     --brand-100:#d6e6f3;
     --green:#12805c;
@@ -37,8 +40,8 @@ export const UI_HTML = `<!DOCTYPE html>
     --red:#c23b4b;
     --red-50:#fff1f2;
     --red-100:#f7ced3;
-    --shadow-sm:0 1px 3px rgba(15,23,42,.04);
-    --shadow:0 4px 14px rgba(15,23,42,.05),0 1px 3px rgba(15,23,42,.03);
+    --shadow-sm:0 1px 2px rgba(11,18,32,.05);
+    --shadow:0 1px 3px rgba(11,18,32,.06),0 8px 24px rgba(11,18,32,.06);
     --ease:cubic-bezier(.22,.72,.22,1);
     --side-w:250px;
     --side-collapsed-w:76px;
@@ -68,24 +71,24 @@ export const UI_HTML = `<!DOCTYPE html>
     align-items:center;
     justify-content:center;
     padding:28px 18px 72px;
-    background:radial-gradient(circle at top right,#e7f0f7 0%,var(--canvas) 52%);
+    background:var(--canvas);
   }
   .auth-card{
     width:100%;max-width:440px;
     background:var(--bg);
     border:1px solid var(--line);
-    border-radius:18px;
-    box-shadow:0 18px 46px rgba(15,23,42,.08);
+    border-radius:16px;
+    box-shadow:var(--shadow);
     overflow:hidden;
     animation:fadeSlide .3s var(--ease);
   }
   .auth-head{
-    padding:26px 26px 18px;
+    padding:24px 24px 16px;
     border-bottom:1px solid var(--line);
     text-align:center;
   }
   .auth-logo{
-    width:56px;height:56px;border-radius:14px;
+    width:48px;height:48px;border-radius:12px;
     background:transparent;overflow:hidden;
     display:grid;place-items:center;
     margin:0 auto 12px;
@@ -101,12 +104,12 @@ export const UI_HTML = `<!DOCTYPE html>
     background:var(--canvas);border:1px solid var(--line);
   }
   .auth-tab{
-    padding:9px 12px;border-radius:8px;border:none;background:transparent;
+    padding:8px 12px;border-radius:8px;border:none;background:transparent;
     font-size:13px;font-weight:600;color:var(--text-2);
     transition:all .16s var(--ease);
   }
   .auth-tab.active{background:#fff;color:var(--brand);box-shadow:var(--shadow-sm)}
-  .auth-body{padding:20px 26px 26px;display:grid;gap:14px}
+  .auth-body{padding:18px 24px 24px;display:grid;gap:12px}
   .auth-note{
     display:flex;align-items:flex-start;gap:9px;
     padding:10px 12px;border-radius:10px;
@@ -135,13 +138,13 @@ export const UI_HTML = `<!DOCTYPE html>
   body.side-collapsed .sidebar{width:var(--side-collapsed-w)}
 
   .side-top{
-    padding:16px 14px;
+    padding:14px 14px;
     border-bottom:1px solid var(--line);
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:10px;
-    min-height:70px;
+    min-height:64px;
   }
   body.side-collapsed .side-top{flex-direction:column;justify-content:center;gap:10px;padding:12px 10px}
 
@@ -187,8 +190,8 @@ export const UI_HTML = `<!DOCTYPE html>
     position:relative;
     width:100%;
     display:flex;align-items:center;gap:11px;
-    padding:9px 11px;
-    border-radius:11px;
+    padding:9px 10px;
+    border-radius:10px;
     border:1px solid transparent;
     background:transparent;
     color:var(--text-2);
@@ -197,7 +200,7 @@ export const UI_HTML = `<!DOCTYPE html>
     transition:all .18s var(--ease);
   }
   .nav-ico{
-    width:34px;height:34px;border-radius:9px;
+    width:32px;height:32px;border-radius:9px;
     display:grid;place-items:center;
     background:var(--canvas);color:var(--text-2);
     border:1px solid var(--line);
@@ -279,15 +282,15 @@ export const UI_HTML = `<!DOCTYPE html>
   .topbar{
     background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
-    padding:12px 26px;
+    padding:12px 24px;
     display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
     position:sticky;top:0;z-index:20;
   }
   .top-left{display:flex;align-items:center;gap:12px;min-width:0}
-  .top-title{font-size:15.5px;font-weight:700;letter-spacing:-.01em}
+  .top-title{font-size:15.5px;font-weight:700;letter-spacing:-.015em}
   .top-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 
-  .sync-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:600;color:var(--text-2)}
+  .sync-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:600;color:var(--text-2)}
   .sync-pill.live{background:var(--green-50);border-color:var(--green-100);color:var(--green)}
   .live-dot{width:8px;height:8px;border-radius:50%;background:#b4becb;display:inline-block;flex-shrink:0}
   .live-dot.pulsing{background:var(--green);animation:pulseRing 2s infinite}
@@ -297,7 +300,7 @@ export const UI_HTML = `<!DOCTYPE html>
   /* Buttons — Primary White + #16537e Hover */
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    height:38px;padding:0 15px;border-radius:9px;
+    height:38px;padding:0 15px;border-radius:8px;
     font-weight:600;font-size:13px;
     border:1px solid var(--line-strong);
     background:#fff;color:var(--text);
@@ -313,43 +316,43 @@ export const UI_HTML = `<!DOCTYPE html>
   .btn-lg{height:44px;padding:0 20px;font-size:13.5px}
   .btn-full{width:100%}
 
-  .workspace{max-width:1180px;width:100%;margin:0 auto;padding:22px 26px 78px}
+  .workspace{max-width:1180px;width:100%;margin:0 auto;padding:20px 24px 88px}
 
   /* Clickable 4 KPI Cards */
-  .kpi-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}
+  .kpi-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px}
   .kpi{
-    background:var(--bg);border:1px solid var(--line);border-radius:14px;
-    padding:15px 17px;text-align:left;
+    background:var(--bg);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;text-align:left;
     box-shadow:var(--shadow-sm);
     transition:all .18s var(--ease);
     display:flex;align-items:center;gap:13px;
   }
   .kpi:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:var(--shadow)}
-  .kpi-ico{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex-shrink:0}
+  .kpi-ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
   .kpi-ico.blue{background:var(--brand-50);color:var(--brand)}
   .kpi-ico.green{background:var(--green-50);color:var(--green)}
   .kpi-ico.red{background:var(--red-50);color:var(--red)}
   .kpi-ico.amber{background:var(--amber-50);color:var(--amber)}
   .kpi-label{font-size:12px;font-weight:600;color:var(--text-2)}
-  .kpi-val{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-top:2px}
+  .kpi-val{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-top:2px}
   .kpi-arrow{margin-left:auto;color:var(--muted);opacity:.55;transition:transform .16s}
   .kpi:hover .kpi-arrow{opacity:1;color:var(--brand);transform:translateX(2px)}
 
   /* Single Focused Feature Layout */
-  .focus-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(290px,1fr);gap:20px;align-items:start}
-  .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+  .focus-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:16px;align-items:start}
+  .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
 
-  .card{background:var(--bg);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
-  .card-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:13px}
-  .card-ico{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex-shrink:0}
+  .card{background:var(--bg);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  .card-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:13px}
+  .card-ico{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
   .card-ico.brand{background:var(--brand-50);color:var(--brand)}
   .card-ico.green{background:var(--green-50);color:var(--green)}
   .card-ico.amber{background:var(--amber-50);color:var(--amber)}
-  .card-title{font-size:16px;font-weight:700;letter-spacing:-.015em}
+  .card-title{font-size:15px;font-weight:700;letter-spacing:-.02em}
   .pill{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap}
   .pill-green{background:var(--green-50);color:var(--green);border:1px solid var(--green-100)}
   .pill-amber{background:var(--amber-50);color:var(--amber);border:1px solid var(--amber-100)}
-  .card-body{padding:22px;display:grid;gap:16px}
+  .card-body{padding:20px;display:grid;gap:14px}
 
   /* Visual Stepper */
   .stepper{
@@ -357,7 +360,7 @@ export const UI_HTML = `<!DOCTYPE html>
     padding:12px 14px;border-radius:12px;background:var(--canvas);border:1px solid var(--line);
   }
   .step-node{display:flex;align-items:center;gap:9px;min-width:0}
-  .step-ico{width:30px;height:30px;border-radius:8px;background:#fff;border:1px solid var(--brand-100);color:var(--brand);display:grid;place-items:center;flex-shrink:0}
+  .step-ico{width:28px;height:28px;border-radius:8px;background:#fff;border:1px solid var(--brand-100);color:var(--brand);display:grid;place-items:center;flex-shrink:0}
   .step-node b{display:block;font-size:12px;line-height:1.2}
   .step-node small{display:block;font-size:11px;color:var(--muted)}
   .step-sep{color:var(--brand);animation:arrowFloat 1.8s ease-in-out infinite}
@@ -369,7 +372,7 @@ export const UI_HTML = `<!DOCTYPE html>
   .in-wrap .in-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;transition:color .15s}
   .in-wrap input{
     width:100%;padding:10px 12px 10px 38px;
-    border:1px solid var(--line-strong);border-radius:10px;
+    border:1px solid var(--line-strong);border-radius:8px;
     background:#fff;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;
   }
   .in-wrap input:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-100)}
@@ -382,12 +385,12 @@ export const UI_HTML = `<!DOCTYPE html>
   .pw-eye:hover{color:var(--brand);background:var(--brand-50)}
   select.plain-select{
     width:100%;margin-top:6px;padding:10px 12px;
-    border:1px solid var(--line-strong);border-radius:10px;background:#fff;color:var(--text);outline:none;
+    border:1px solid var(--line-strong);border-radius:8px;background:#fff;color:var(--text);outline:none;
   }
   select.plain-select:focus,textarea.bulk-area:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-100)}
   textarea.bulk-area{
     width:100%;min-height:132px;margin-top:6px;padding:11px 13px;resize:vertical;
-    border:1px solid var(--line-strong);border-radius:10px;background:#fff;color:var(--text);
+    border:1px solid var(--line-strong);border-radius:8px;background:#fff;color:var(--text);
     outline:none;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;line-height:1.5;
     transition:border-color .15s,box-shadow .15s;
   }
@@ -419,7 +422,7 @@ export const UI_HTML = `<!DOCTYPE html>
 
   /* Safety Quota Cards */
   .meters{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .meter{padding:11px 12px;border-radius:11px;border:1px solid var(--line);background:var(--canvas)}
+  .meter{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--canvas)}
   .meter-top{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:var(--text-2);margin-bottom:7px}
   .meter-top span{display:inline-flex;align-items:center;gap:5px}
   .meter-top b{font-size:13px;color:var(--text)}
@@ -448,7 +451,8 @@ export const UI_HTML = `<!DOCTYPE html>
   .search-box svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
   .search-box input{width:100%;padding:0 12px 0 34px;height:36px;border:1px solid var(--line-strong);border-radius:9px;background:#fff;font-size:13px;outline:none}
   .search-box input:focus{border-color:var(--brand)}
-  .table-wrap{overflow-x:auto}
+  .table-wrap{overflow-x:auto;max-height:560px}
+  thead th{position:sticky;top:0;z-index:1}
   table{width:100%;border-collapse:collapse;font-size:13px}
   th{padding:11px 18px;background:#fafbfd;border-bottom:1px solid var(--line);text-align:left;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
   td{padding:13px 18px;border-bottom:1px solid var(--line);vertical-align:middle}
@@ -481,17 +485,17 @@ export const UI_HTML = `<!DOCTYPE html>
   .divider{height:1px;background:var(--line)}
 
   /* Clean Switchable Integrate Hub */
-  .int-hub{max-width:760px}
+  .int-hub{max-width:720px}
   .int-switch{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
   .int-tab{
-    display:flex;align-items:center;gap:12px;padding:14px 16px;
+    display:flex;align-items:center;gap:12px;padding:12px 14px;
     border-radius:14px;border:1.5px solid var(--line);
     background:#fff;text-align:left;box-shadow:var(--shadow-sm);
     transition:all .18s var(--ease);
   }
   .int-tab:hover{border-color:var(--brand);transform:translateY(-1px)}
   .int-tab.active{border-color:var(--brand);background:var(--brand-50);box-shadow:0 0 0 3px var(--brand-100)}
-  .int-tab-ico{width:38px;height:38px;border-radius:10px;background:var(--canvas);border:1px solid var(--line);color:var(--text-2);display:grid;place-items:center;flex-shrink:0}
+  .int-tab-ico{width:36px;height:36px;border-radius:10px;background:var(--canvas);border:1px solid var(--line);color:var(--text-2);display:grid;place-items:center;flex-shrink:0}
   .int-tab.active .int-tab-ico{background:var(--brand);border-color:var(--brand);color:#fff}
   .int-tab-title{font-size:14px;font-weight:700;color:var(--text)}
   .int-tab-tag{margin-left:auto;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
@@ -514,14 +518,14 @@ export const UI_HTML = `<!DOCTYPE html>
   }
   .group-profile{display:flex;align-items:center;gap:12px;min-width:220px;flex:1}
   .group-avatar{
-    width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;
+    width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;
     background:var(--brand-50);border:1.5px solid var(--brand-100);color:var(--brand);
     display:grid;place-items:center;font-size:15px;font-weight:700;
   }
   .group-avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .group-meta{min-width:0}
   .group-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .group-name{font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+  .group-name{font-size:13.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
   .group-handle{font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
   .group-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .group-select{
@@ -619,8 +623,23 @@ export const UI_HTML = `<!DOCTYPE html>
     .workspace{padding:16px 14px 92px}
     .topbar{padding:10px 14px}
     .sidebar{width:var(--side-collapsed-w)}
+    .sidebar .brand-name,.sidebar .nav-title,.sidebar .nav-group-label{display:none}
+    .sidebar .side-top{flex-direction:column;justify-content:center;gap:10px;padding:12px 10px}
+    .sidebar .side-nav{padding:14px 12px;align-items:center}
+    .sidebar .nav-btn{width:48px;height:48px;padding:0;justify-content:center}
+    .sidebar .nav-ico{width:38px;height:38px;border-radius:10px}
+    .sidebar .nav-badge{position:absolute;top:2px;right:2px;padding:0 5px;font-size:10px;line-height:15px;min-width:16px;text-align:center}
+    .sidebar .nav-dot{position:absolute;top:7px;right:7px;box-shadow:0 0 0 2px #fff}
+    .sidebar .side-foot{padding:12px;justify-items:center}
+    .sidebar .user-box{padding:5px;border-radius:11px}
+    .sidebar .user-meta{display:none}
+    .sidebar .logout-btn{position:relative;width:46px;height:40px;padding:0}
+    .sidebar .logout-btn span.lbl{display:none}
     .site-footer{padding:8px 14px;flex-wrap:wrap;justify-content:center;gap:4px 12px}
     .toasts{bottom:74px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important;transition-duration:.01ms !important}
   }
 </style>
 </head>
@@ -668,7 +687,7 @@ export const UI_HTML = `<!DOCTYPE html>
         </div>
       </label>
 
-      <div id="authError" class="result-box err"></div>
+      <div id="authError" class="result-box err" aria-live="polite"></div>
 
       <button class="btn btn-primary btn-lg btn-full" id="authSubmitBtn" type="submit">Sign In &amp; Open Workspace</button>
 
@@ -914,7 +933,7 @@ export const UI_HTML = `<!DOCTYPE html>
                 Generate Safe Invite Link
               </button>
 
-              <div id="o1Result" class="result-box"></div>
+              <div id="o1Result" class="result-box" aria-live="polite"></div>
             </form>
           </article>
 
@@ -1069,7 +1088,7 @@ export const UI_HTML = `<!DOCTYPE html>
                 Add Contact &amp; Safe Invite
               </button>
 
-              <div id="o2Result" class="result-box"></div>
+              <div id="o2Result" class="result-box" aria-live="polite"></div>
             </form>
           </article>
 
@@ -1288,7 +1307,7 @@ export const UI_HTML = `<!DOCTYPE html>
             </div>
           </div>
 
-          <div id="statusTableWrap"></div>
+          <div id="statusTableWrap" aria-live="polite"><div class="empty"><div class="empty-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>No activity recorded yet</h3><p>Use Option 1 or Option 2 from the left menu to send invites. Everything saves to your account.</p><button type="button" class="btn btn-primary" data-go="option1" onclick="openMenu(this.dataset.go)">Open Option 1 · Safe Link</button></div></div>
         </article>
       </section>
 
@@ -1517,7 +1536,7 @@ export const UI_HTML = `<!DOCTYPE html>
   </div>
 </div>
 
-<div class="toasts" id="toasts"></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <script>
 const $ = id => document.getElementById(id);
