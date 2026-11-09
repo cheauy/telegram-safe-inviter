@@ -518,12 +518,6 @@ export const UI_HTML = `<!DOCTYPE html>
   .int-tab.active .int-tab-ico{background:var(--brand);border-color:var(--brand);color:#fff}
   .int-tab-title{font-size:14px;font-weight:700;color:var(--text)}
   .int-tab-tag{margin-left:auto;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
-  .status-strip{display:flex;gap:10px;flex-wrap:wrap}
-  .status-chip{
-    flex:1;min-width:190px;display:flex;align-items:center;gap:9px;
-    padding:9px 12px;border-radius:10px;border:1px solid var(--line);
-    background:var(--canvas);font-size:12.5px;font-weight:600;color:var(--text);
-  }
   /* Integrate setup stepper + permission checklist + listener choice */
 .stepper-4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
 .step-node.step-cta{background:none;border:none;padding:0;font:inherit;color:var(--text);text-align:left;cursor:pointer;border-radius:8px}
@@ -1487,18 +1481,12 @@ export const UI_HTML = `<!DOCTYPE html>
                   <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
                 </div>
                 <h3 class="card-title">Phone Account (MTProto)</h3>
-                <button class="btn btn-sm" type="button" onclick="testConnections()" style="margin-left:auto">Check Status</button>
               </div>
               <div class="card-body">
 
-                <div class="status-strip">
-                  <div class="status-chip"><span class="live-dot" id="diagMtDot"></span><span id="diagMtTitle">Account: Not signed in</span></div>
-                </div>
-
                 <div class="pool-list" id="mtPoolList"></div>
 
-                <section class="int-step" aria-label="Step 1 Telegram app credentials">
-                  <div class="int-step-head"><h4>Telegram app credentials</h4><span class="int-state">Step 1</span></div>
+                <section class="int-step">
                   <div class="two">
                     <label class="field">API ID
                       <div class="in-wrap">
@@ -1515,8 +1503,7 @@ export const UI_HTML = `<!DOCTYPE html>
                   </div>
                 </section>
 
-                <section class="int-step" aria-label="Step 2 Sign in with your number">
-                  <div class="int-step-head"><h4>Sign in with your number</h4><span class="int-state">Step 2</span></div>
+                <section class="int-step">
                   <div class="two">
                     <label class="field">Helper Account Label
                       <div class="in-wrap">
@@ -1609,6 +1596,15 @@ export const UI_HTML = `<!DOCTYPE html>
                 </div>
               </div>
             </div>
+            <div class="card">
+              <div class="card-head">
+                <h3 class="card-title">Phone health</h3>
+                <button class="btn btn-sm" type="button" onclick="testConnections()" style="margin-left:auto">Re-check</button>
+              </div>
+              <div class="card-body" style="gap:8px">
+                <div class="int-check"><span class="live-dot" id="diagMtDot"></span><div><b>Phone account</b><span id="diagMtTitle">Account: Not signed in</span></div></div>
+              </div>
+            </div>
             <div class="card" id="intRailMt" style="display:none">
               <div class="card-head">
                 <h3 class="card-title">Bot vs Phone — which does what</h3>
@@ -1694,6 +1690,7 @@ let appData = null;
 let activeLoginId = null;
 let lastWebhookUrl = '';
 let botVerified = false;
+let mtVerified = false;
 
 const MENU_META = {
   option1: 'Option 1 · Safe Invite Link',
@@ -1966,7 +1963,7 @@ function renderMtprotoPool() {
 
   if (!stats.length) {
     $('o2PoolText').textContent = 'Account Pool: No helper phone linked yet';
-    $('mtPoolList').innerHTML = '<div class="guide-note" style="background:var(--canvas);border-color:var(--line)"><span>No Option 2 accounts linked yet. Sign in below to add your first account (you can add 2–3 for automatic rotation).</span></div>';
+    $('mtPoolList').innerHTML = '';
     return;
   }
 
@@ -2741,16 +2738,16 @@ async function saveMtprotoConfig(e) {
 
 let verifyInFlight = false;
 // Connection health auto-recheck: every 60s, only while the Integrate page
-// is open, only after a successful verification, and never overlapping
-// (testConnections() has the verifyInFlight guard). 60s is safe: one
-// inspect is ~5 light Bot API calls (~300/hour), far below Telegram's
+// is open, only after a successful verification (bot or phone), and never
+// overlapping (testConnections() has the verifyInFlight guard). 60s is safe:
+// one inspect is ~5 light Bot API calls (~300/hour), far below Telegram's
 // ~30 requests/second per-bot limit. Auto-checks are silent so they
 // never spam toasts; manual checks still show the verifying toast.
 const INT_HEALTH_RECHECK_MS = 60000;
 let intHealthTimer = null;
 function shouldRecheckIntHealth() {
   const intPage = $('menu-integrate');
-  return botVerified && !document.hidden && intPage && intPage.style.display !== 'none';
+  return (botVerified || mtVerified) && !document.hidden && intPage && intPage.style.display !== 'none';
 }
 function startIntHealthRecheck() {
   stopIntHealthRecheck();
@@ -2807,10 +2804,10 @@ async function testConnections(silent) {
   $('intStep3State').className = 'int-state' + ((d.bot && d.bot.chat) ? ' ok' : '');
   $('intStep4State').textContent = botVerified ? 'Ready' : 'Locked until verified';
   $('intStep4State').className = 'int-state' + (botVerified ? ' ok' : ' locked');
-  if (botVerified) startIntHealthRecheck(); else stopIntHealthRecheck();
   $('intStep4Block').classList.toggle('locked', !botVerified);
   updateIntStepper(d);
 
+  mtVerified = Boolean(d.mtproto && d.mtproto.connected);
   if (d.mtproto && d.mtproto.connected) {
     if (d.mtproto.accounts && d.mtproto.accounts.length > 1) {
       const okCount = d.mtproto.accounts.filter(a => a.connected).length;
@@ -2824,6 +2821,7 @@ async function testConnections(silent) {
     $('diagMtDot').className = 'live-dot';
     $('diagMtTitle').textContent = (d.mtproto && d.mtproto.error) ? d.mtproto.error : 'Account: Not signed in';
   }
+  if (botVerified || mtVerified) startIntHealthRecheck(); else stopIntHealthRecheck();
   refreshStatus(false);
   } finally { verifyInFlight = false; }
 }
