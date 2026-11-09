@@ -588,43 +588,12 @@ export const UI_HTML = `<!DOCTYPE html>
 .vs-row b{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--brand)}
 .vs-row span{font-size:13px;color:var(--text-2)}
 
-  /* Saved Group Profile Bar */
-  .group-bar{
-    background:var(--bg);border:1px solid var(--line);border-radius:14px;
-    padding:12px 16px;margin-bottom:18px;box-shadow:var(--shadow-sm);
-    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  }
-  .group-profile{display:flex;align-items:center;gap:12px;min-width:220px;flex:1}
   .group-avatar{
     width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;
     background:var(--brand-50);border:1.5px solid var(--brand-100);color:var(--brand);
     display:grid;place-items:center;font-size:15px;font-weight:700;
   }
   .group-avatar img{width:100%;height:100%;object-fit:cover;display:block}
-  .group-meta{min-width:0}
-  .group-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .group-name{font-size:13.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
-  .group-handle{font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
-  .group-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .group-select{
-    height:34px;padding:0 10px;border-radius:9px;border:1px solid var(--line-strong);
-    background:#fff;color:var(--text);font-size:12.5px;font-weight:600;min-width:190px;max-width:280px;outline:none;
-  }
-  .group-select:focus{border-color:var(--brand)}
-  .group-add-drawer{
-    width:100%;display:none;padding-top:12px;margin-top:2px;border-top:1px solid var(--line);
-    gap:8px;align-items:center;flex-wrap:wrap;
-  }
-  .group-add-drawer.open{display:flex;animation:fadeSlide .18s var(--ease)}
-  /* Group bar moved into the left menu: vertical card, full-width controls */
-  .side-group{padding:0 12px 12px}
-  .sidebar .group-bar{flex-direction:column;align-items:stretch;margin:0;padding:12px;gap:10px;box-shadow:none}
-  .sidebar .group-profile{min-width:0;flex:none}
-  .sidebar .group-name{max-width:170px}
-  .sidebar .group-controls{flex-direction:column;align-items:stretch}
-  .sidebar .group-select{min-width:0;max-width:none;width:100%}
-  .sidebar .group-add-drawer{padding-top:10px}
-  body.side-collapsed .side-group{display:none}
 
   /* Group list view: rows reuse the pool-row style */
   .group-list{display:grid;gap:9px}
@@ -729,7 +698,6 @@ export const UI_HTML = `<!DOCTYPE html>
     .sidebar .user-meta{display:none}
     .sidebar .logout-btn{position:relative;width:46px;height:40px;padding:0}
     .sidebar .logout-btn span.lbl{display:none}
-    .sidebar .side-group{display:none}
     .site-footer{padding:8px 14px;flex-wrap:wrap;justify-content:center;gap:4px 12px}
     .toasts{bottom:74px}
   }
@@ -870,46 +838,6 @@ export const UI_HTML = `<!DOCTYPE html>
         <span class="nav-badge" id="navGroupCount">0</span>
       </button>
     </nav>
-
-    <div class="side-group" id="sideGroupWrap">
-      <div class="nav-group-label">Group</div>
-      <!-- ============ SAVED GROUPS / CHANNELS PROFILE DROPDOWN ============ -->
-      <div class="group-bar" id="groupProfileBar">
-        <div class="group-profile">
-          <div class="group-avatar" id="groupAvatarWrap">TG</div>
-          <div class="group-meta">
-            <div class="group-name-row">
-              <span class="group-name" id="groupProfileName">No Group Selected</span>
-              <span class="tag tag-brand" id="groupProfileMembers">0 members</span>
-              <span class="tag tag-green" id="groupProfileStatus" style="display:none">Admin Ready</span>
-            </div>
-            <div class="group-handle">
-              <span id="groupProfileHandle">Select or save a Telegram group / channel</span>
-            </div>
-          </div>
-        </div>
-        <div class="group-controls">
-          <select id="savedGroupSelect" class="group-select" onchange="selectSavedGroup(this.value)" aria-label="Saved Groups and Channels">
-            <option value="">-- Select Saved Group --</option>
-          </select>
-          <button type="button" class="btn btn-sm" onclick="refreshActiveGroup()" title="Refresh member count &amp; photo">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-            Refresh
-          </button>
-          <button type="button" class="btn btn-sm btn-primary" onclick="toggleAddGroupDrawer()">+ Save Group</button>
-          <button type="button" class="btn btn-sm" id="removeGroupBtn" onclick="removeCurrentGroup()" style="display:none">Remove</button>
-        </div>
-        <div class="group-add-drawer" id="groupAddDrawer">
-          <div class="in-wrap" style="margin-top:0;flex:1;min-width:220px">
-            <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <input id="newGroupChatId" placeholder="-1001234567890 or @channel_username" />
-          </div>
-          <button type="button" class="btn btn-sm btn-primary" id="saveGroupBtn" onclick="saveNewGroup()">Fetch &amp; Save Profile</button>
-          <button type="button" class="btn btn-sm" onclick="toggleAddGroupDrawer()">Cancel</button>
-        </div>
-      </div>
-
-    </div>
     <div class="side-foot">
       <div class="user-box" id="userBox">
         <div class="user-av" id="userAvatar">U</div>
@@ -1989,60 +1917,6 @@ function computeCounts(rows) {
   return { all: rows.length, link, success, failed, left };
 }
 
-function renderGroupProfileBar() {
-  if (!appData) return;
-  const groups = appData.savedGroups || [];
-  const activeId = (appData.config && appData.config.chatId) || '';
-  const sel = $('savedGroupSelect');
-  sel.innerHTML = '<option value="">-- Select Saved Group (' + groups.length + ') --</option>' +
-    groups.map(g => {
-      const mTxt = (g.memberCount !== null && g.memberCount !== undefined) ? ' · ' + Number(g.memberCount).toLocaleString() + ' members' : '';
-      const uTxt = g.username ? ' (@' + g.username + ')' : '';
-      return '<option value="' + esc(g.id) + '">' + esc(g.title + uTxt + mTxt) + '</option>';
-    }).join('');
-
-  const match = groups.find(g => g.id === activeId || (g.username && '@' + g.username === activeId) || g.inputRef === activeId) || groups[0] || null;
-  if (match) sel.value = match.id;
-
-  if (match) {
-    $('groupProfileName').textContent = match.title || match.id;
-    $('groupProfileHandle').textContent = (match.username ? '@' + match.username + ' · ' : '') + 'ID ' + match.id + (match.type ? ' · ' + match.type : '');
-    if (match.memberCount !== null && match.memberCount !== undefined) {
-      $('groupProfileMembers').style.display = 'inline-flex';
-      $('groupProfileMembers').textContent = Number(match.memberCount).toLocaleString() + ' members';
-    } else {
-      $('groupProfileMembers').style.display = 'none';
-    }
-    const statusBadge = $('groupProfileStatus');
-    statusBadge.style.display = 'inline-flex';
-    if (match.canInvite) {
-      statusBadge.className = 'tag tag-green';
-      statusBadge.textContent = 'Admin Ready';
-    } else if (match.isAdmin) {
-      statusBadge.className = 'tag tag-amber';
-      statusBadge.textContent = 'Need Invite Right';
-    } else {
-      statusBadge.className = 'tag tag-amber';
-      statusBadge.textContent = 'Check Bot Admin';
-    }
-    if (match.photoDataUrl) {
-      $('groupAvatarWrap').innerHTML = '<img src="' + esc(match.photoDataUrl) + '" alt="" />';
-    } else {
-      $('groupAvatarWrap').textContent = String(match.title || 'TG').trim().slice(0, 2).toUpperCase();
-    }
-    $('removeGroupBtn').style.display = 'inline-flex';
-    $('o1Chat').placeholder = 'Using: ' + match.title;
-  } else {
-    $('groupAvatarWrap').textContent = 'TG';
-    $('groupProfileName').textContent = activeId ? ('Group ' + activeId) : 'No Group Selected';
-    $('groupProfileHandle').textContent = activeId ? 'Click Save Group or Verify Bot to load photo & member count' : 'Save a Group / Channel to see photo, @username & member count';
-    $('groupProfileMembers').style.display = 'none';
-    $('groupProfileStatus').style.display = 'none';
-    $('removeGroupBtn').style.display = 'none';
-    $('o1Chat').placeholder = 'Uses active saved group';
-  }
-}
-
 function renderGroupList() {
   const wrap = $('groupListWrap');
   if (!wrap) return;
@@ -2050,6 +1924,9 @@ function renderGroupList() {
   const activeId = (appData && appData.config && appData.config.chatId) || '';
   $('groupListCount').textContent = groups.length + (groups.length === 1 ? ' group' : ' groups');
   $('navGroupCount').textContent = groups.length;
+  const activeMatch = groups.find(g => g.id === activeId || (g.username && '@' + g.username === activeId) || g.inputRef === activeId) || groups[0] || null;
+  const o1ChatEl = $('o1Chat');
+  if (o1ChatEl) o1ChatEl.placeholder = activeMatch ? 'Using: ' + (activeMatch.title || activeMatch.id) : 'Uses active saved group';
   if (!groups.length) {
     wrap.innerHTML = '<div class="guide-note"><span>No groups saved yet. Paste a Group ID (-100...) or @username above, then click + Save Group.</span></div>';
     return;
@@ -2196,7 +2073,6 @@ function renderAll() {
           : 'No listener active yet — enable Local Listener or set a Webhook to receive join requests.';
   }
 
-  renderGroupProfileBar();
   renderGroupList();
   renderMtprotoPool();
   renderStatusTable();
@@ -2355,46 +2231,6 @@ function hydrateConfigForm() {
   }
 }
 
-function toggleAddGroupDrawer() {
-  const drawer = $('groupAddDrawer');
-  const open = !drawer.classList.contains('open');
-  drawer.classList.toggle('open', open);
-  if (open) {
-    const active = ($('cfgChatId') && $('cfgChatId').value.trim()) || '';
-    if (!$('newGroupChatId').value.trim() && active && (!(appData && appData.savedGroups && appData.savedGroups.length))) {
-      $('newGroupChatId').value = active;
-    }
-    $('newGroupChatId').focus();
-  }
-}
-
-async function saveNewGroup() {
-  const chatId = $('newGroupChatId').value.trim();
-  if (!chatId) return toast('Enter a Telegram Group ID (-100...) or @username', 'err');
-  const btn = $('saveGroupBtn');
-  btn.disabled = true;
-  try {
-    const res = await fetch('/api/groups/save', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatId, select: true }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Could not save group profile');
-    $('newGroupChatId').value = '';
-    $('groupAddDrawer').classList.remove('open');
-    const membersTxt = (data.group && data.group.memberCount !== null && data.group.memberCount !== undefined)
-      ? ' (' + Number(data.group.memberCount).toLocaleString() + ' members)'
-      : '';
-    toast('Saved ' + (data.group ? data.group.title : chatId) + membersTxt, 'ok');
-    await refreshStatus(true);
-  } catch (err) {
-    toast(err.message, 'err');
-  } finally {
-    btn.disabled = false;
-  }
-}
-
 async function selectSavedGroup(chatId) {
   if (!chatId) return;
   try {
@@ -2414,11 +2250,8 @@ async function selectSavedGroup(chatId) {
 }
 
 async function refreshActiveGroup(chatId) {
-  const id = chatId || $('savedGroupSelect').value || (appData && appData.config && appData.config.chatId) || '';
-  if (!id) {
-    toggleAddGroupDrawer();
-    return;
-  }
+  const id = chatId || (appData && appData.config && appData.config.chatId) || '';
+  if (!id) return toast('No group saved yet — add one in the Group menu', 'err');
   try {
     const res = await fetch('/api/groups/refresh', {
       method: 'POST',
@@ -2438,7 +2271,7 @@ async function refreshActiveGroup(chatId) {
 }
 
 async function removeCurrentGroup(chatId) {
-  const id = chatId || $('savedGroupSelect').value || '';
+  const id = chatId || '';
   if (!id) return;
   try {
     const res = await fetch('/api/groups/remove', {

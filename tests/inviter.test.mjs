@@ -281,8 +281,9 @@ test('Auth signup/login isolates & persists user history and serves clean Tenh G
     assert.match(html, /id="intPanelBot"/);
     assert.match(html, /id="intPanelMt"/);
     assert.match(html, /id="siteFooter"[\s\S]*Copyright &copy; 2026 Tenh/);
-    assert.match(html, /id="groupProfileBar"/);
-    assert.match(html, /id="savedGroupSelect"/);
+    assert.doesNotMatch(html, /id="groupProfileBar"/);
+    assert.doesNotMatch(html, /id="savedGroupSelect"/);
+    assert.doesNotMatch(html, /id="sideGroupWrap"/);
     assert.match(html, /id="o1VipDays"/);
     assert.match(html, /id="o2PoolBanner"/);
     assert.match(html, /id="bulkVipDays"/);
