@@ -626,6 +626,11 @@ export const UI_HTML = `<!DOCTYPE html>
   .sidebar .group-add-drawer{padding-top:10px}
   body.side-collapsed .side-group{display:none}
 
+  /* Group list view: rows reuse the pool-row style */
+  .group-list{display:grid;gap:9px}
+  .group-list .pool-row{align-items:flex-start}
+  .group-list .pool-info b{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
   /* VIP Expiry Controls */
   .vip-box{
     padding:12px 14px;border-radius:12px;border:1px solid var(--brand-100);
@@ -856,6 +861,14 @@ export const UI_HTML = `<!DOCTYPE html>
         <span class="nav-title">Integrate Telegram</span>
         <span class="nav-dot" id="navIntDot"></span>
       </button>
+
+      <button class="nav-btn" data-menu="group" data-tip="Group" onclick="openMenu('group')">
+        <span class="nav-ico">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <span class="nav-title">Group</span>
+        <span class="nav-badge" id="navGroupCount">0</span>
+      </button>
     </nav>
 
     <div class="side-group" id="sideGroupWrap">
@@ -923,14 +936,6 @@ export const UI_HTML = `<!DOCTYPE html>
           <span class="live-dot" id="syncDot"></span>
           <span id="syncLabel">Listener Off</span>
         </div>
-        <button class="btn btn-sm" id="syncBtn" type="button" onclick="syncNow()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-          Sync Events
-        </button>
-        <button class="btn btn-sm btn-primary" id="setupBtn" type="button" onclick="openMenu('integrate')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Telegram Setup
-        </button>
       </div>
     </header>
 
@@ -1414,6 +1419,29 @@ export const UI_HTML = `<!DOCTYPE html>
         </article>
       </section>
 
+      <!-- ============ PAGE: GROUP LIST ============ -->
+      <section id="menu-group" style="display:none">
+        <article class="card">
+          <div class="card-head">
+            <div class="card-ico brand">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="card-title">Group</div>
+            <span class="tag tag-brand" id="groupListCount">0 groups</span>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+              <div class="in-wrap" style="margin-top:0;flex:1;min-width:220px">
+                <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <input id="groupListNewId" placeholder="-1001234567890 or @channel_username" />
+              </div>
+              <button type="button" class="btn btn-sm btn-primary" id="groupListSaveBtn" onclick="saveGroupFromList()">+ Save Group</button>
+            </div>
+            <div class="group-list" id="groupListWrap" aria-live="polite"></div>
+          </div>
+        </article>
+      </section>
+
       <!-- ============ PAGE 4: INTEGRATE TELEGRAM (CLEAN SWITCHER — 1 AT A TIME) ============ -->
       <section id="menu-integrate" style="display:none">
         <div class="int-layout">
@@ -1759,6 +1787,7 @@ const MENU_META = {
   bulk: 'Bulk CSV Queue',
   status: 'Activity & Status',
   integrate: 'Integrate Telegram',
+  group: 'Group',
 };
 
 function openIntegrateTab(tab) {
@@ -1908,7 +1937,7 @@ function pickO1Mode(mode) {
 
 function openMenu(name) {
   activeMenu = name;
-  ['option1', 'option2', 'bulk', 'status', 'integrate'].forEach(m => {
+  ['option1', 'option2', 'bulk', 'status', 'integrate', 'group'].forEach(m => {
     const el = $('menu-' + m);
     el.style.display = m === name ? 'block' : 'none';
     if (m === name) {
@@ -1921,11 +1950,7 @@ function openMenu(name) {
     btn.classList.toggle('active', btn.dataset.menu === name);
   });
   $('topMenuTitle').textContent = MENU_META[name] || MENU_META.option1;
-  // The two topbar buttons live in the shared topbar: hide them on this
-  // page only (the setup button just re-opens this page); other views keep them.
-  const onIntegrate = name === 'integrate';
-  if ($('syncBtn')) $('syncBtn').style.display = onIntegrate ? 'none' : '';
-  if ($('setupBtn')) $('setupBtn').style.display = onIntegrate ? 'none' : '';
+  if (name === 'group') renderGroupList();
 }
 
 function openStatusFilter(filter) {
@@ -2015,6 +2040,58 @@ function renderGroupProfileBar() {
     $('groupProfileStatus').style.display = 'none';
     $('removeGroupBtn').style.display = 'none';
     $('o1Chat').placeholder = 'Uses active saved group';
+  }
+}
+
+function renderGroupList() {
+  const wrap = $('groupListWrap');
+  if (!wrap) return;
+  const groups = (appData && appData.savedGroups) || [];
+  const activeId = (appData && appData.config && appData.config.chatId) || '';
+  $('groupListCount').textContent = groups.length + (groups.length === 1 ? ' group' : ' groups');
+  $('navGroupCount').textContent = groups.length;
+  if (!groups.length) {
+    wrap.innerHTML = '<div class="guide-note"><span>No groups saved yet. Paste a Group ID (-100...) or @username above, then click + Save Group.</span></div>';
+    return;
+  }
+  wrap.innerHTML = groups.map(g => {
+    const isActive = g.id === activeId || (g.username && '@' + g.username === activeId) || g.inputRef === activeId;
+    const members = (g.memberCount !== null && g.memberCount !== undefined) ? Number(g.memberCount).toLocaleString() + ' members' : '';
+    const status = g.canInvite ? ['tag tag-green', 'Admin Ready'] : g.isAdmin ? ['tag tag-amber', 'Need Invite Right'] : ['tag tag-amber', 'Check Bot Admin'];
+    const sub = [(g.username ? '@' + g.username : ''), 'ID ' + g.id + (g.type ? ' · ' + g.type : ''), members].filter(Boolean).join(' · ');
+    return '<div class="pool-row">' +
+      '<div class="group-avatar">' + esc(String(g.title || 'TG').trim().slice(0, 2).toUpperCase()) + '</div>' +
+      '<div class="pool-info"><b>' + esc(g.title || g.id) + (isActive ? ' <span class="tag tag-brand">Active</span>' : '') + '</b><span>' + esc(sub) + '</span></div>' +
+      '<span class="' + status[0] + '">' + status[1] + '</span>' +
+      (isActive
+        ? '<button type="button" class="btn btn-sm" disabled>Active</button>'
+        : '<button type="button" class="btn btn-sm btn-primary" data-gid="' + esc(g.id) + '" onclick="selectSavedGroup(this.dataset.gid)">Select</button>') +
+      '<button type="button" class="btn btn-sm" data-gid="' + esc(g.id) + '" onclick="refreshActiveGroup(this.dataset.gid)">Refresh</button>' +
+      '<button type="button" class="btn btn-sm" data-gid="' + esc(g.id) + '" onclick="removeCurrentGroup(this.dataset.gid)">Remove</button>' +
+    '</div>';
+  }).join('');
+}
+
+async function saveGroupFromList() {
+  const chatId = $('groupListNewId').value.trim();
+  if (!chatId) return toast('Enter a Telegram Group ID (-100...) or @username', 'err');
+  const btn = $('groupListSaveBtn');
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/groups/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chatId, select: true }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not save group profile');
+    $('groupListNewId').value = '';
+    toast('Saved ' + (data.group ? data.group.title : chatId), 'ok');
+    await refreshStatus(true);
+  } catch (err) {
+    toast(err.message, 'err');
+  } finally {
+    btn.disabled = false;
   }
 }
 
@@ -2108,7 +2185,6 @@ function renderAll() {
     $('intTestBtn').disabled = !botVerified;
     $('intEnableBtn').disabled = !botVerified && !appData.pollingEnabled;
     $('intEnableBtn').textContent = appData.pollingEnabled ? 'Pause Listener' : 'Enable Listener';
-    $('syncBtn').disabled = !botVerified;
     $('healthEventsTitle').textContent = appData.pollingEnabled ? 'Live' : (lastWebhookUrl ? 'Webhook' : '—');
     $('healthEventsDot').className = 'live-dot' + ((appData.pollingEnabled || lastWebhookUrl) ? ' ok' : '');
     $('listenerModeNote').textContent = appData.pollingEnabled
@@ -2121,6 +2197,7 @@ function renderAll() {
   }
 
   renderGroupProfileBar();
+  renderGroupList();
   renderMtprotoPool();
   renderStatusTable();
   renderBulkQueue();
@@ -2336,9 +2413,9 @@ async function selectSavedGroup(chatId) {
   }
 }
 
-async function refreshActiveGroup() {
-  const chatId = $('savedGroupSelect').value || (appData && appData.config && appData.config.chatId) || '';
-  if (!chatId) {
+async function refreshActiveGroup(chatId) {
+  const id = chatId || $('savedGroupSelect').value || (appData && appData.config && appData.config.chatId) || '';
+  if (!id) {
     toggleAddGroupDrawer();
     return;
   }
@@ -2346,28 +2423,28 @@ async function refreshActiveGroup() {
     const res = await fetch('/api/groups/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatId }),
+      body: JSON.stringify({ chatId: id }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to refresh group');
     const membersTxt = (data.group && data.group.memberCount !== null && data.group.memberCount !== undefined)
       ? ' · ' + Number(data.group.memberCount).toLocaleString() + ' members'
       : '';
-    toast('Refreshed: ' + (data.group ? data.group.title : chatId) + membersTxt, 'ok');
+    toast('Refreshed: ' + (data.group ? data.group.title : id) + membersTxt, 'ok');
     refreshStatus(false);
   } catch (err) {
     toast(err.message, 'err');
   }
 }
 
-async function removeCurrentGroup() {
-  const chatId = $('savedGroupSelect').value || '';
-  if (!chatId) return;
+async function removeCurrentGroup(chatId) {
+  const id = chatId || $('savedGroupSelect').value || '';
+  if (!id) return;
   try {
     const res = await fetch('/api/groups/remove', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatId }),
+      body: JSON.stringify({ chatId: id }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to remove saved group');
@@ -2934,22 +3011,6 @@ async function togglePolling() {
   toast(data.pollingEnabled ? 'Local Listener enabled!' : 'Local Listener paused', 'ok');
   if (data.pollingEnabled) lastWebhookUrl = '';
   refreshStatus(false);
-}
-
-async function syncNow() {
-  const btn = $('syncBtn');
-  btn.disabled = true;
-  try {
-    const res = await fetch('/api/telegram/sync', { method:'POST' });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-    toast('Synced ' + data.processed + ' Telegram event(s)', 'ok');
-    refreshStatus(false);
-  } catch (err) {
-    toast(err.message, 'err');
-  } finally {
-    btn.disabled = !botVerified;
-  }
 }
 
 async function setWebhook() {

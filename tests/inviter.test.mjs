@@ -271,6 +271,11 @@ test('Auth signup/login isolates & persists user history and serves clean Tenh G
     assert.match(html, /Failed/);
     assert.match(html, /Customer Leaved/);
     assert.match(html, /Integrate Telegram/);
+    assert.match(html, /data-menu="group"/);
+    assert.match(html, /id="menu-group"/);
+    assert.match(html, /id="groupListWrap"/);
+    assert.doesNotMatch(html, /Sync Events/);
+    assert.doesNotMatch(html, /Telegram Setup/);
     assert.match(html, /id="intTabBot"[\s\S]*Option 1 · Bot Setup[\s\S]*Recommended/);
     assert.match(html, /id="intTabMt"[\s\S]*Option 2 · Phone Account[\s\S]*Optional/);
     assert.match(html, /id="intPanelBot"/);
