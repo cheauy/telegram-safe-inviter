@@ -29,6 +29,16 @@ win:
     - target: portable
       arch: [x64]
 
+# 1-click updates: electron-updater checks GitHub Releases for a newer
+# version. `npm run dist:win` writes dist/latest.yml (the update feed)
+# alongside the installers. The portable .exe cannot update itself in
+# place — only the NSIS-installed app auto-updates (see ELECTRON.md).
+publish:
+  provider: github
+  owner: cheauy
+  repo: telegram-safe-inviter
+  releaseType: release
+
 nsis:
   # Per-user install (no admin rights needed): installs under
   # %LOCALAPPDATA%\Programs\Tenh Gram by default.

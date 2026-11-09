@@ -38,6 +38,43 @@ folder to `%APPDATA%\Tenh Gram\data` once before first launch (or, when
 running `npm run desktop` from the checkout, the app copies it
 automatically on first run if the desktop data folder is still empty).
 
+## 1-click updates
+
+The installed app updates itself — no git, no terminal, no rebuild.
+
+**What the user clicks:**
+- The app checks for updates automatically, 10 seconds after it starts
+  (silent if you are already up to date or offline).
+- Or click **Help > Check for Updates** (also under **File**) any time.
+- If a newer version is found, it downloads in the background (progress
+  shows in the taskbar). When it is ready, a box asks **"Restart now"**
+  or **"Later"**. The app only restarts and installs when you click
+  **Restart now**. Your accounts are kept — they live in
+  `%APPDATA%\Tenh Gram\data`, outside the app install.
+
+**What makes it work:**
+- Updates come from **GitHub Releases** of `cheauy/telegram-safe-inviter`,
+  not from a branch. A new version only appears after a release is
+  published with the built `.exe` files attached (`TenhGram-Setup-*.exe`
+  + `latest.yml`, which `npm run dist:win` generates in `dist\`).
+- It only works for the app installed with **TenhGram-Setup-*.exe**.
+  The portable `.exe` cannot update itself in place — if you run the
+  portable version, download the new portable file yourself instead.
+- In `npm run desktop` (dev) the menu item explains that updates need
+  the installed app; nothing crashes and nothing is downloaded.
+
+**How a new version is released (maintainer):**
+1. Merge the changes to `main`, bump `"version"` in `package.json`.
+2. On Windows: `npm install` then `npm run dist:win`.
+3. On GitHub, create a Release (tag `vX.Y.Z`) and attach everything in
+   `dist\` — especially `TenhGram-Setup-X.Y.Z.exe` and `latest.yml`.
+4. Installed apps pick it up on their next check.
+
+**Updating from the repo checkout instead (no installer):**
+Double-click `update.bat` in the repo folder. It runs
+`git pull` + `npm install` + `npm run desktop`, and stops with a message
+if `git pull` fails (e.g. local changes — run `git stash` once first).
+
 ## Build the .exe (on Windows)
 
 On your Windows PC, in `C:\Users\TUF\telegram-safe-inviter`:

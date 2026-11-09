@@ -18,12 +18,25 @@
  *  3. Otherwise the server is started in-process: createServer() +
  *     startBackgroundTasks() from src/server.js, exactly as the CLI does.
  *  4. Closing the window quits the app and stops the server it started.
+ *  5. 1-click updates: electron-updater checks GitHub Releases (auto-check
+ *     10s after start + File/Help > Check for Updates). A downloaded
+ *     update only installs when the user clicks "Restart now".
  */
 
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
+
+// electron-updater is a runtime dependency (see package.json). It is
+// optional at load time: if it is missing, updates are simply disabled
+// and the app still starts normally.
+let autoUpdater = null;
+try {
+  ({ autoUpdater } = require('electron-updater'));
+} catch {
+  autoUpdater = null;
+}
 
 const APP_NAME = 'Tenh Gram';
 const DEFAULT_PORT = 3040;
@@ -41,6 +54,178 @@ let mainWindow = null;
 let httpServer = null;
 let stopBackgroundTasks = null;
 let serverOwned = false;
+let updateDownloaded = false;
+let manualUpdateCheck = false;
+
+/** Send an update status to the window (preload exposes it to the page). */
+function sendUpdateStatus(status) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('tenhgram:update-status', status);
+  }
+}
+
+/**
+ * 1-click updates (electron-updater, GitHub Releases).
+ *
+ * - Only the installed (NSIS) app can update: in dev (`npm run desktop`)
+ *   and in the portable .exe there is no installed version to replace,
+ *   so the updater is skipped / reports that updates need the installer.
+ * - Auto-check runs once, 10s after start, and stays silent when there
+ *   is no update or no network. A manual check shows the result.
+ * - Nothing restarts on its own: when an update is downloaded the user
+ *   gets "Restart now / Later" and only "Restart now" installs it.
+ */
+function setupUpdater() {
+  if (!autoUpdater) return;
+  autoUpdater.autoDownload = true;
+  autoUpdater.autoInstallOnAppQuit = false;
+
+  autoUpdater.on('checking-for-update', () => {
+    sendUpdateStatus({ state: 'checking' });
+  });
+  autoUpdater.on('update-available', info => {
+    sendUpdateStatus({ state: 'available', version: info && info.version });
+    if (manualUpdateCheck) {
+      dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: APP_NAME,
+        message: `Tenh Gram ${info.version} is available. Downloading it now — you will be asked before it installs.`,
+        buttons: ['OK'],
+      });
+    }
+  });
+  autoUpdater.on('update-not-available', () => {
+    sendUpdateStatus({ state: 'up-to-date' });
+    if (manualUpdateCheck) {
+      dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: APP_NAME,
+        message: 'You are on the latest version of Tenh Gram.',
+        buttons: ['OK'],
+      });
+    }
+  });
+  autoUpdater.on('download-progress', progress => {
+    const percent = Math.round(progress.percent || 0);
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.setProgressBar(percent / 100);
+    }
+    sendUpdateStatus({ state: 'downloading', percent });
+  });
+  autoUpdater.on('update-downloaded', info => {
+    updateDownloaded = true;
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.setProgressBar(-1);
+    }
+    sendUpdateStatus({ state: 'downloaded', version: info && info.version });
+    dialog
+      .showMessageBox(mainWindow, {
+        type: 'info',
+        title: APP_NAME,
+        message: `Tenh Gram ${info.version} is ready to install. Restart now to update, or keep using this version for now.`,
+        buttons: ['Restart now', 'Later'],
+        defaultId: 0,
+        cancelId: 1,
+      })
+      .then(({ response }) => {
+        if (response === 0) autoUpdater.quitAndInstall();
+      });
+  });
+  autoUpdater.on('error', err => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.setProgressBar(-1);
+    }
+    sendUpdateStatus({ state: 'error', message: err && err.message });
+    // Silent on the automatic check (e.g. offline); only a manual
+    // check tells the user.
+    if (manualUpdateCheck) {
+      dialog.showMessageBox(mainWindow, {
+        type: 'warning',
+        title: APP_NAME,
+        message: `Could not check for updates.\n${err && err.message ? err.message : 'Check your internet connection and try again.'}`,
+        buttons: ['OK'],
+      });
+    }
+  });
+}
+
+/** One update check. `manual` = the user clicked it, so show the result. */
+function checkForUpdates(manual) {
+  manualUpdateCheck = !!manual;
+  if (!autoUpdater) {
+    if (manual) {
+      dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: APP_NAME,
+        message: 'Updates are not available in this copy of Tenh Gram.',
+        buttons: ['OK'],
+      });
+    }
+    return;
+  }
+  if (!app.isPackaged) {
+    if (manual) {
+      dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: APP_NAME,
+        message:
+          '1-click updates only work in the installed app.\n\nInstall Tenh Gram from TenhGram-Setup-1.0.0.exe (not the portable .exe, not npm run desktop), then Help > Check for Updates will work.',
+        buttons: ['OK'],
+      });
+    }
+    return;
+  }
+  if (updateDownloaded) {
+    // Already downloaded: offer the restart again instead of re-checking.
+    dialog
+      .showMessageBox(mainWindow, {
+        type: 'info',
+        title: APP_NAME,
+        message: 'An update is already downloaded and ready to install. Restart now?',
+        buttons: ['Restart now', 'Later'],
+        defaultId: 0,
+        cancelId: 1,
+      })
+      .then(({ response }) => {
+        if (response === 0) autoUpdater.quitAndInstall();
+      });
+    return;
+  }
+  autoUpdater.checkForUpdates().catch(() => {
+    // The 'error' event above reports it; never crash on a failed check.
+  });
+}
+
+function buildMenu() {
+  const template = [
+    {
+      label: 'File',
+      submenu: [
+        { label: 'Check for Updates', click: () => checkForUpdates(true) },
+        { type: 'separator' },
+        { role: 'quit' },
+      ],
+    },
+    {
+      label: 'Help',
+      submenu: [
+        { label: 'Check for Updates', click: () => checkForUpdates(true) },
+        {
+          label: 'About Tenh Gram',
+          click: () => {
+            dialog.showMessageBox(mainWindow, {
+              type: 'info',
+              title: APP_NAME,
+              message: `Tenh Gram ${app.getVersion()}\n\nTelegram Safe Inviter — Windows desktop app.`,
+              buttons: ['OK'],
+            });
+          },
+        },
+      ],
+    },
+  ];
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
 
 function getPort() {
   const parsed = Number(process.env.PORT || DEFAULT_PORT);
@@ -155,6 +340,18 @@ async function start() {
   } catch (err) {
     dialog.showErrorBox(APP_NAME, `Tenh Gram could not open its window:\n${err.message}`);
     app.quit();
+    return;
+  }
+
+  // 1-click updates: menu + manual check, and one silent auto-check.
+  setupUpdater();
+  buildMenu();
+  ipcMain.handle('tenhgram:check-for-updates', () => {
+    checkForUpdates(true);
+    return true;
+  });
+  if (app.isPackaged && autoUpdater) {
+    setTimeout(() => checkForUpdates(false), 10000);
   }
 }
 

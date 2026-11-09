@@ -17,6 +17,7 @@
     "dist:win": "node electron/build-icon.cjs && electron-builder --win"
   },
   "dependencies": {
+    "electron-updater": "^6.8.11",
     "telegram": "^2.26.22"
   },
   "devDependencies": {
