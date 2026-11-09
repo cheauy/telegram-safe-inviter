@@ -1492,6 +1492,15 @@ export const UI_HTML = `<!DOCTYPE html>
                     </div>
                     <div id="listenerHookCard">
                       <button class="mode-btn" type="button" id="setWebhookBtn" onclick="setWebhook()" disabled><b>Webhook</b><small>For a deployed server</small></button>
+                      <div id="webhookUrlWrap" hidden style="margin-top:10px">
+                        <label class="field">Webhook URL
+                          <div class="in-wrap">
+                            <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                            <input id="cfgWebhookUrl" class="mono" aria-label="HTTPS Webhook URL" placeholder="https://your-domain.com/telegram/webhook" />
+                          </div>
+                        </label>
+                        <button class="btn btn-sm" type="button" style="margin-top:8px" onclick="setWebhook()">Set Webhook</button>
+                      </div>
                     </div>
                   </div>
                   <p class="callout-amber">Only one can run at a time.</p>
@@ -1509,23 +1518,6 @@ export const UI_HTML = `<!DOCTYPE html>
                 </div>
                 <div class="result-box" id="intTestOut"></div>
 
-                <details class="adv-details" id="intAdvDetails">
-                  <summary>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                    Advanced — Welcome message &amp; webhook URL
-                  </summary>
-                  <div style="display:grid;gap:12px">
-                    <label class="field">Welcome message
-                      <textarea id="cfgWelcome" placeholder="Welcome to the group! Your membership is active."></textarea>
-                    </label>
-                    <label class="field">Webhook URL
-                      <div class="in-wrap">
-                        <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-                        <input id="cfgWebhookUrl" class="mono" aria-label="HTTPS Webhook URL" placeholder="https://your-domain.com/telegram/webhook" />
-                      </div>
-                    </label>
-                  </div>
-                </details>
               </form>
             </article>
 
@@ -2201,7 +2193,6 @@ function hydrateConfigForm() {
   if (!appData || !appData.config) return;
   const c = appData.config;
   $('cfgChatId').value = c.chatId || '';
-  $('cfgWelcome').value = c.welcomeText || '';
   $('botTokenHint').textContent = c.botTokenSet ? '(Saved: ' + c.botTokenPreview + ')' : '(Not set)';
   $('cfgApiId').value = c.apiId || '';
   $('apiHashHint').textContent = c.apiHashSet ? '(Saved: ' + c.apiHashPreview + ')' : '(Not set)';
@@ -2752,7 +2743,7 @@ function useAsFallback(btn) {
 
 async function saveBotConfig(e) {
   e.preventDefault();
-  const body = { chatId: $('cfgChatId').value.trim(), welcomeText: $('cfgWelcome').value.trim() };
+  const body = { chatId: $('cfgChatId').value.trim() };
   if ($('cfgBotToken').value.trim()) body.botToken = $('cfgBotToken').value.trim();
   const res = await fetch('/api/telegram/config', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
   const data = await res.json();
@@ -2880,11 +2871,17 @@ async function syncNow() {
 }
 
 async function setWebhook() {
+  // First click reveals the URL field inside the Webhook card; second click (or Set Webhook) submits it.
+  const wrap = $('webhookUrlWrap');
+  if (wrap.hidden) {
+    wrap.hidden = false;
+    $('cfgWebhookUrl').focus();
+    return;
+  }
   const url = $('cfgWebhookUrl').value.trim();
   if (!url) {
-    $('intAdvDetails').open = true;
     $('cfgWebhookUrl').focus();
-    return toast('Add your webhook URL under Advanced first', 'err');
+    return toast('Add your webhook URL first', 'err');
   }
   const res = await fetch('/api/telegram/webhook-setup', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ url }) });
   const data = await res.json();
