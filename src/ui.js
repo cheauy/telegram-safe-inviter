@@ -505,7 +505,27 @@ export const UI_HTML = `<!DOCTYPE html>
     padding:9px 12px;border-radius:10px;border:1px solid var(--line);
     background:var(--canvas);font-size:12.5px;font-weight:600;color:var(--text);
   }
-  .adv-details{border:1px solid var(--line);border-radius:11px;background:var(--canvas);padding:10px 14px}
+  /* Integrate setup stepper + permission checklist + listener choice */
+.stepper-4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.step-node.step-cta{background:none;border:none;padding:0;font:inherit;color:var(--text);text-align:left;cursor:pointer;border-radius:8px}
+.step-node.step-cta:hover .step-ico{background:var(--brand);color:#fff;border-color:var(--brand)}
+.int-checks{display:grid;gap:8px}
+.int-check-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.int-check-head b{font-size:12.5px}
+.int-check{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:var(--canvas)}
+.int-check b{display:block;font-size:13px}
+.int-check span{display:block;font-size:12px;color:var(--text-2);margin-top:1px}
+.int-check.ok{border-color:var(--green-100);background:var(--green-50)}
+.int-check.ok span{color:#0f5c43}
+.int-check.warn{border-color:var(--amber-100);background:var(--amber-50)}
+.int-check.warn span{color:var(--amber)}
+.listener-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.listener-card{padding:13px;border:1.5px solid var(--line);border-radius:11px;background:#fff;display:grid;gap:9px;align-content:start;transition:all .16s var(--ease)}
+.listener-card.active{border-color:var(--brand);background:var(--brand-50);box-shadow:0 0 0 3px var(--brand-100)}
+.listener-card b{display:block;font-size:13px}
+.listener-card small{display:block;font-size:11.5px;color:var(--text-2);margin-top:1px}
+.listener-note{font-size:12px;color:var(--text-2)}
+.adv-details{border:1px solid var(--line);border-radius:11px;background:var(--canvas);padding:10px 14px}
   .adv-details summary{cursor:pointer;font-size:12.5px;font-weight:600;color:var(--brand);list-style:none;display:flex;align-items:center;gap:7px}
   .adv-details summary::-webkit-details-marker{display:none}
   .adv-details[open] summary{margin-bottom:12px}
@@ -617,7 +637,7 @@ export const UI_HTML = `<!DOCTYPE html>
 
   @media(max-width:1060px){.kpi-strip{grid-template-columns:repeat(2,1fr)}.focus-grid,.grid-2{grid-template-columns:1fr}}
   @media(max-width:680px){
-    .kpi-strip,.two,.mode-grid,.meters,.int-switch{grid-template-columns:1fr}
+    .kpi-strip,.two,.mode-grid,.meters,.int-switch,.listener-grid{grid-template-columns:1fr}
     .stepper{grid-template-columns:1fr;gap:6px}
     .step-sep{display:none}
     .workspace{padding:16px 14px 92px}
@@ -1314,6 +1334,27 @@ export const UI_HTML = `<!DOCTYPE html>
       <!-- ============ PAGE 4: INTEGRATE TELEGRAM (CLEAN SWITCHER — 1 AT A TIME) ============ -->
       <section id="menu-integrate" style="display:none">
         <div class="int-hub">
+          <div class="stepper stepper-4" style="margin-bottom:18px" aria-label="Setup steps">
+            <div class="step-node">
+              <span class="step-ico">1</span>
+              <span><b>Create Bot</b></span>
+            </div>
+            <svg class="step-sep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            <div class="step-node">
+              <span class="step-ico">2</span>
+              <span><b>Connect Group</b></span>
+            </div>
+            <svg class="step-sep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            <div class="step-node">
+              <span class="step-ico">3</span>
+              <span><b>Choose Listener</b></span>
+            </div>
+            <svg class="step-sep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            <button type="button" class="step-node step-cta" onclick="openMenu('option1')">
+              <span class="step-ico">4</span>
+              <span><b>Test Invite</b></span>
+            </button>
+          </div>
           <!-- Choose WHICH Integration you want -->
           <div class="int-switch" role="tablist" aria-label="Choose Telegram Integration">
             <button type="button" class="int-tab active" id="intTabBot" onclick="openIntegrateTab('bot')">
@@ -1340,20 +1381,16 @@ export const UI_HTML = `<!DOCTYPE html>
                 <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="16" y1="16" x2="16.01" y2="16"/></svg>
               </div>
               <div class="card-title">Bot &amp; Group Connection</div>
-              <button class="btn btn-sm btn-primary" type="button" onclick="testConnections()" style="margin-left:auto">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                Check Status
-              </button>
             </div>
             <form class="card-body" onsubmit="saveBotConfig(event)">
-              <div class="guide-note">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                <span>Start here: get a token from <b>@BotFather</b>, paste below, and add your Bot as <b>Admin</b> in your Group/Channel.</span>
-              </div>
 
-              <div class="status-strip">
-                <div class="status-chip"><span class="live-dot" id="diagBotDot"></span><span id="diagBotTitle">Bot: Not checked</span></div>
-                <div class="status-chip"><span class="live-dot" id="diagChatDot"></span><span id="diagChatTitle">Group: Not checked</span></div>
+              <div class="int-checks">
+                <div class="int-check-head"><b>Connection checks</b><button class="btn btn-sm" type="button" onclick="testConnections()">Re-check</button></div>
+                <div class="int-check" id="diagBotRow"><span class="live-dot" id="diagBotDot"></span><div><b>Bot connected</b><span id="diagBotTitle">Not checked</span></div></div>
+                <div class="int-check" id="diagChatRow"><span class="live-dot" id="diagChatDot"></span><div><b>Group found</b><span id="diagChatTitle">Not checked</span></div></div>
+                <div class="int-check" id="diagAdminRow"><span class="live-dot" id="diagAdminDot"></span><div><b>Bot is Admin</b><span id="diagAdminTitle">Not checked</span></div></div>
+                <div class="int-check" id="diagInviteRow"><span class="live-dot" id="diagInviteDot"></span><div><b>Bot can invite users</b><span id="diagInviteTitle">Not checked</span></div></div>
+                <div class="int-check" id="diagRemoveRow"><span class="live-dot" id="diagRemoveDot"></span><div><b>Can remove expired members</b><span id="diagRemoveTitle">Not checked</span></div></div>
               </div>
 
               <label class="field">Bot Token <span class="hint" id="botTokenHint"></span>
@@ -1365,40 +1402,46 @@ export const UI_HTML = `<!DOCTYPE html>
 
               <label class="field">Group or Channel ID
                 <div class="in-wrap">
-                  <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2-2z"/></svg>
                   <input id="cfgChatId" placeholder="-1001234567890 or @your_channel" />
                 </div>
               </label>
 
-              <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <button class="btn btn-primary" style="flex:1;min-width:190px" type="submit">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
-                  Save &amp; Verify Bot
-                </button>
-                <button class="btn" type="button" id="togglePollBtn" onclick="togglePolling()">Enable Local Listener</button>
+              <button class="btn btn-primary btn-full" type="submit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                Save &amp; Verify Bot
+              </button>
+
+              <div>
+                <div class="listener-grid">
+                  <div class="listener-card" id="listenerPollCard">
+                    <div><b>Local Listener</b><small>Only while this server runs on localhost</small></div>
+                    <button class="btn btn-sm" type="button" id="togglePollBtn" onclick="togglePolling()" disabled>Enable Local Listener</button>
+                  </div>
+                  <div class="listener-card" id="listenerHookCard">
+                    <div><b>Webhook</b><small>Needs a public HTTPS URL</small></div>
+                    <div class="in-wrap" style="margin-top:0">
+                      <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                      <input id="cfgWebhookUrl" aria-label="HTTPS Webhook URL" placeholder="https://your-domain.com/api/option1/webhook" />
+                    </div>
+                    <button class="btn btn-sm" type="button" id="setWebhookBtn" onclick="setWebhook()" disabled>Set Webhook</button>
+                  </div>
+                </div>
+                <p class="listener-note" id="listenerModeNote" style="margin:8px 0 0">No listener active yet — enable Local Listener or set a Webhook to receive join requests.</p>
               </div>
 
               <details class="adv-details">
                 <summary>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                  Advanced: Welcome Message &amp; Webhook URL
+                  Advanced: Welcome Message
                 </summary>
                 <div style="display:grid;gap:12px">
-                  <label class="field">Welcome DM <span class="hint">({name} = first name)</span>
+                  <label class="field">Welcome DM
                     <div class="in-wrap">
                       <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
                       <input id="cfgWelcome" placeholder="Welcome {name}! Your request to join has been approved." />
                     </div>
                   </label>
-                  <div style="display:flex;gap:8px;align-items:flex-end">
-                    <label class="field" style="flex:1">HTTPS Webhook URL
-                      <div class="in-wrap">
-                        <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-                        <input id="cfgWebhookUrl" placeholder="https://your-domain.com/api/option1/webhook" />
-                      </div>
-                    </label>
-                    <button class="btn btn-sm" type="button" style="height:44px;padding:0 14px" onclick="setWebhook()">Set Webhook</button>
-                  </div>
                 </div>
               </details>
             </form>
@@ -1414,10 +1457,6 @@ export const UI_HTML = `<!DOCTYPE html>
               <button class="btn btn-sm" type="button" onclick="testConnections()" style="margin-left:auto">Check Status</button>
             </div>
             <div class="card-body">
-              <div class="guide-note">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                <span>Link 1–3 helper accounts for automatic rotation. Create API ID &amp; Hash at <a href="https://my.telegram.org" target="_blank" rel="noopener noreferrer" style="color:var(--brand);font-weight:700;text-decoration:underline">my.telegram.org</a>, then sign in below.</span>
-              </div>
 
               <div class="status-strip">
                 <div class="status-chip"><span class="live-dot" id="diagMtDot"></span><span id="diagMtTitle">Account: Not signed in</span></div>
@@ -1463,7 +1502,7 @@ export const UI_HTML = `<!DOCTYPE html>
                     <input id="mtCode" placeholder="12345" />
                   </div>
                 </label>
-                <label class="field">2FA Password <span class="hint">(if enabled)</span>
+                <label class="field">2FA Password
                   <div class="in-wrap">
                     <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/></svg>
                     <input id="mtPass" type="password" placeholder="Optional" />
@@ -1476,7 +1515,7 @@ export const UI_HTML = `<!DOCTYPE html>
               <details class="adv-details">
                 <summary>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  Advanced: Safety Caps (Default: 4 / hr, 15 / day)
+                  Advanced: Safety Caps
                 </summary>
                 <form style="display:grid;gap:12px" onsubmit="saveMtprotoConfig(event)">
                   <div class="two">
@@ -1546,6 +1585,8 @@ let activeMenu = 'option1';
 let statusFilter = 'all';
 let appData = null;
 let activeLoginId = null;
+let lastWebhookUrl = '';
+let botVerified = false;
 
 const MENU_META = {
   option1: 'Option 1 · Safe Invite Link',
@@ -1872,6 +1913,17 @@ function renderAll() {
       $('syncLabel').textContent = 'Listener Off';
       $('togglePollBtn').textContent = 'Enable Local Listener';
     }
+    $('listenerPollCard').classList.toggle('active', Boolean(appData.pollingEnabled));
+    $('listenerHookCard').classList.toggle('active', !appData.pollingEnabled && Boolean(lastWebhookUrl));
+    $('togglePollBtn').disabled = !botVerified && !appData.pollingEnabled;
+    $('setWebhookBtn').disabled = !botVerified;
+    $('listenerModeNote').textContent = appData.pollingEnabled
+      ? 'Active: Local Listener — join requests arrive while this server runs.'
+      : !botVerified
+        ? 'Verify your bot first — Save & Verify Bot (or Re-check) unlocks the listener.'
+        : lastWebhookUrl
+          ? 'Active: Webhook — join requests go to your public URL.'
+          : 'No listener active yet — enable Local Listener or set a Webhook to receive join requests.';
   }
 
   renderGroupProfileBar();
@@ -2592,21 +2644,29 @@ async function testConnections() {
   const res = await fetch('/api/telegram/inspect');
   const d = await res.json();
 
+  lastWebhookUrl = (d.bot && d.bot.webhook && d.bot.webhook.url) ? d.bot.webhook.url : '';
+  botVerified = Boolean(d.bot && d.bot.connected && d.bot.chat && d.bot.chat.isAdmin);
+  const setCheck = (rowId, dotId, titleId, state, text) => {
+    $(rowId).className = 'int-check' + (state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : '');
+    $(dotId).className = 'live-dot' + (state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : '');
+    $(titleId).textContent = text;
+  };
   if (d.bot && d.bot.connected) {
-    $('diagBotDot').className = 'live-dot ok';
-    $('diagBotTitle').textContent = 'Bot: @' + d.bot.bot.username;
+    setCheck('diagBotRow', 'diagBotDot', 'diagBotTitle', 'ok', '@' + d.bot.bot.username);
     if (d.bot.chat) {
-      $('diagChatDot').className = d.bot.chat.canInvite ? 'live-dot ok' : 'live-dot warn';
-      $('diagChatTitle').textContent = d.bot.chat.canInvite
-        ? 'Group: ' + d.bot.chat.title + ' (Admin Ready)'
-        : 'Group: Need Bot Admin Invite Rights';
+      setCheck('diagChatRow', 'diagChatDot', 'diagChatTitle', 'ok', d.bot.chat.title + (d.bot.chat.type ? ' · ' + d.bot.chat.type : ''));
+      setCheck('diagAdminRow', 'diagAdminDot', 'diagAdminTitle', d.bot.chat.isAdmin ? 'ok' : 'warn', d.bot.chat.isAdmin ? 'Admin (' + (d.bot.chat.botStatus || 'administrator') + ')' : 'Not Admin — add the bot as Admin in the group');
+      setCheck('diagInviteRow', 'diagInviteDot', 'diagInviteTitle', d.bot.chat.canInvite ? 'ok' : 'warn', d.bot.chat.canInvite ? 'Can invite users' : 'No invite rights — give the bot “Invite Users” permission');
     } else {
-      $('diagChatDot').className = 'live-dot warn';
-      $('diagChatTitle').textContent = d.bot.chatError || 'Group: Not checked';
+      setCheck('diagChatRow', 'diagChatDot', 'diagChatTitle', 'warn', d.bot.chatError || 'Group not found — check the Group ID');
+      setCheck('diagAdminRow', 'diagAdminDot', 'diagAdminTitle', '', 'Not checked');
+      setCheck('diagInviteRow', 'diagInviteDot', 'diagInviteTitle', '', 'Not checked');
     }
   } else {
-    $('diagBotDot').className = 'live-dot';
-    $('diagBotTitle').textContent = (d.bot && d.bot.error) ? 'Bot: ' + d.bot.error : 'Bot: Not connected';
+    setCheck('diagBotRow', 'diagBotDot', 'diagBotTitle', 'warn', (d.bot && d.bot.error) ? d.bot.error : 'Not connected');
+    setCheck('diagChatRow', 'diagChatDot', 'diagChatTitle', '', 'Not checked');
+    setCheck('diagAdminRow', 'diagAdminDot', 'diagAdminTitle', '', 'Not checked');
+    setCheck('diagInviteRow', 'diagInviteDot', 'diagInviteTitle', '', 'Not checked');
   }
 
   if (d.mtproto && d.mtproto.connected) {
@@ -2631,6 +2691,7 @@ async function togglePolling() {
   const data = await res.json();
   if (!res.ok) return toast(data.error, 'err');
   toast(data.pollingEnabled ? 'Local Listener enabled!' : 'Local Listener paused', 'ok');
+  if (data.pollingEnabled) lastWebhookUrl = '';
   refreshStatus(false);
 }
 
