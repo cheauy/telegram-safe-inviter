@@ -90,7 +90,7 @@ export async function inspectMtprotoAccount(env = process.env, { userId = null, 
   const apiHash = account?.apiHash || env.TELEGRAM_API_HASH;
   const sessionStr = account?.sessionString || env.TELEGRAM_STRING_SESSION || '';
   if (!apiId || !apiHash || !sessionStr) {
-    return { connected: false, error: 'MTProto API ID, Hash, or Session is not configured.' };
+    return { connected: false, error: 'Account: Not signed in' };
   }
   const client = await getMtprotoClient(env, { userId, account });
   const me = await client.getMe();

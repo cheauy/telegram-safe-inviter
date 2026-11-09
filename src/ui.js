@@ -518,12 +518,6 @@ export const UI_HTML = `<!DOCTYPE html>
   .int-tab.active .int-tab-ico{background:var(--brand);border-color:var(--brand);color:#fff}
   .int-tab-title{font-size:14px;font-weight:700;color:var(--text)}
   .int-tab-tag{margin-left:auto;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
-  .status-strip{display:flex;gap:10px;flex-wrap:wrap}
-  .status-chip{
-    flex:1;min-width:190px;display:flex;align-items:center;gap:9px;
-    padding:9px 12px;border-radius:10px;border:1px solid var(--line);
-    background:var(--canvas);font-size:12.5px;font-weight:600;color:var(--text);
-  }
   /* Integrate setup stepper + permission checklist + listener choice */
 .stepper-4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
 .step-node.step-cta{background:none;border:none;padding:0;font:inherit;color:var(--text);text-align:left;cursor:pointer;border-radius:8px}
@@ -578,53 +572,22 @@ export const UI_HTML = `<!DOCTYPE html>
   .adv-details summary{cursor:pointer;font-size:12.5px;font-weight:600;color:var(--brand);list-style:none;display:flex;align-items:center;gap:7px}
   .adv-details summary::-webkit-details-marker{display:none}
   .adv-details[open] summary{margin-bottom:12px}
-.flow-list{list-style:none;display:grid}
-.flow-list li{display:flex;align-items:center;gap:11px;padding:9px 2px}
-.flow-list li + li{border-top:1px solid var(--line)}
-.flow-num{width:24px;height:24px;border-radius:50%;background:var(--brand-soft);color:var(--brand);font-size:12px;font-weight:800;display:grid;place-items:center;flex-shrink:0}
-.flow-list b{font-size:13px;font-weight:600}
 .vs-row{display:grid;gap:3px;padding:10px 2px}
 .vs-row + .vs-row{border-top:1px solid var(--line)}
 .vs-row b{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--brand)}
 .vs-row span{font-size:13px;color:var(--text-2)}
 
-  /* Saved Group Profile Bar */
-  .group-bar{
-    background:var(--bg);border:1px solid var(--line);border-radius:14px;
-    padding:12px 16px;margin-bottom:18px;box-shadow:var(--shadow-sm);
-    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  }
-  .group-profile{display:flex;align-items:center;gap:12px;min-width:220px;flex:1}
   .group-avatar{
     width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;
     background:var(--brand-50);border:1.5px solid var(--brand-100);color:var(--brand);
     display:grid;place-items:center;font-size:15px;font-weight:700;
   }
   .group-avatar img{width:100%;height:100%;object-fit:cover;display:block}
-  .group-meta{min-width:0}
-  .group-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .group-name{font-size:13.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
-  .group-handle{font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
-  .group-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .group-select{
-    height:34px;padding:0 10px;border-radius:9px;border:1px solid var(--line-strong);
-    background:#fff;color:var(--text);font-size:12.5px;font-weight:600;min-width:190px;max-width:280px;outline:none;
-  }
-  .group-select:focus{border-color:var(--brand)}
-  .group-add-drawer{
-    width:100%;display:none;padding-top:12px;margin-top:2px;border-top:1px solid var(--line);
-    gap:8px;align-items:center;flex-wrap:wrap;
-  }
-  .group-add-drawer.open{display:flex;animation:fadeSlide .18s var(--ease)}
-  /* Group bar moved into the left menu: vertical card, full-width controls */
-  .side-group{padding:0 12px 12px}
-  .sidebar .group-bar{flex-direction:column;align-items:stretch;margin:0;padding:12px;gap:10px;box-shadow:none}
-  .sidebar .group-profile{min-width:0;flex:none}
-  .sidebar .group-name{max-width:170px}
-  .sidebar .group-controls{flex-direction:column;align-items:stretch}
-  .sidebar .group-select{min-width:0;max-width:none;width:100%}
-  .sidebar .group-add-drawer{padding-top:10px}
-  body.side-collapsed .side-group{display:none}
+
+  /* Group list view: rows reuse the pool-row style */
+  .group-list{display:grid;gap:9px}
+  .group-list .pool-row{align-items:flex-start}
+  .group-list .pool-info b{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
   /* VIP Expiry Controls */
   .vip-box{
@@ -724,7 +687,6 @@ export const UI_HTML = `<!DOCTYPE html>
     .sidebar .user-meta{display:none}
     .sidebar .logout-btn{position:relative;width:46px;height:40px;padding:0}
     .sidebar .logout-btn span.lbl{display:none}
-    .sidebar .side-group{display:none}
     .site-footer{padding:8px 14px;flex-wrap:wrap;justify-content:center;gap:4px 12px}
     .toasts{bottom:74px}
   }
@@ -856,47 +818,15 @@ export const UI_HTML = `<!DOCTYPE html>
         <span class="nav-title">Integrate Telegram</span>
         <span class="nav-dot" id="navIntDot"></span>
       </button>
+
+      <button class="nav-btn" data-menu="group" data-tip="Group" onclick="openMenu('group')">
+        <span class="nav-ico">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <span class="nav-title">Group</span>
+        <span class="nav-badge" id="navGroupCount">0</span>
+      </button>
     </nav>
-
-    <div class="side-group" id="sideGroupWrap">
-      <div class="nav-group-label">Group</div>
-      <!-- ============ SAVED GROUPS / CHANNELS PROFILE DROPDOWN ============ -->
-      <div class="group-bar" id="groupProfileBar">
-        <div class="group-profile">
-          <div class="group-avatar" id="groupAvatarWrap">TG</div>
-          <div class="group-meta">
-            <div class="group-name-row">
-              <span class="group-name" id="groupProfileName">No Group Selected</span>
-              <span class="tag tag-brand" id="groupProfileMembers">0 members</span>
-              <span class="tag tag-green" id="groupProfileStatus" style="display:none">Admin Ready</span>
-            </div>
-            <div class="group-handle">
-              <span id="groupProfileHandle">Select or save a Telegram group / channel</span>
-            </div>
-          </div>
-        </div>
-        <div class="group-controls">
-          <select id="savedGroupSelect" class="group-select" onchange="selectSavedGroup(this.value)" aria-label="Saved Groups and Channels">
-            <option value="">-- Select Saved Group --</option>
-          </select>
-          <button type="button" class="btn btn-sm" onclick="refreshActiveGroup()" title="Refresh member count &amp; photo">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-            Refresh
-          </button>
-          <button type="button" class="btn btn-sm btn-primary" onclick="toggleAddGroupDrawer()">+ Save Group</button>
-          <button type="button" class="btn btn-sm" id="removeGroupBtn" onclick="removeCurrentGroup()" style="display:none">Remove</button>
-        </div>
-        <div class="group-add-drawer" id="groupAddDrawer">
-          <div class="in-wrap" style="margin-top:0;flex:1;min-width:220px">
-            <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <input id="newGroupChatId" placeholder="-1001234567890 or @channel_username" />
-          </div>
-          <button type="button" class="btn btn-sm btn-primary" id="saveGroupBtn" onclick="saveNewGroup()">Fetch &amp; Save Profile</button>
-          <button type="button" class="btn btn-sm" onclick="toggleAddGroupDrawer()">Cancel</button>
-        </div>
-      </div>
-
-    </div>
     <div class="side-foot">
       <div class="user-box" id="userBox">
         <div class="user-av" id="userAvatar">U</div>
@@ -923,14 +853,6 @@ export const UI_HTML = `<!DOCTYPE html>
           <span class="live-dot" id="syncDot"></span>
           <span id="syncLabel">Listener Off</span>
         </div>
-        <button class="btn btn-sm" id="syncBtn" type="button" onclick="syncNow()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-          Sync Events
-        </button>
-        <button class="btn btn-sm btn-primary" id="setupBtn" type="button" onclick="openMenu('integrate')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Telegram Setup
-        </button>
       </div>
     </header>
 
@@ -1414,6 +1336,29 @@ export const UI_HTML = `<!DOCTYPE html>
         </article>
       </section>
 
+      <!-- ============ PAGE: GROUP LIST ============ -->
+      <section id="menu-group" style="display:none">
+        <article class="card">
+          <div class="card-head">
+            <div class="card-ico brand">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="card-title">Group</div>
+            <span class="tag tag-brand" id="groupListCount">0 groups</span>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+              <div class="in-wrap" style="margin-top:0;flex:1;min-width:220px">
+                <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <input id="groupListNewId" placeholder="-1001234567890 or @channel_username" />
+              </div>
+              <button type="button" class="btn btn-sm btn-primary" id="groupListSaveBtn" onclick="saveGroupFromList()">+ Save Group</button>
+            </div>
+            <div class="group-list" id="groupListWrap" aria-live="polite"></div>
+          </div>
+        </article>
+      </section>
+
       <!-- ============ PAGE 4: INTEGRATE TELEGRAM (CLEAN SWITCHER — 1 AT A TIME) ============ -->
       <section id="menu-integrate" style="display:none">
         <div class="int-layout">
@@ -1471,7 +1416,7 @@ export const UI_HTML = `<!DOCTYPE html>
               <form class="card-body" onsubmit="saveBotConfig(event)">
 
                 <section class="int-step" aria-label="Step 1 Bot token">
-                  <div class="int-step-head"><h4>Bot token</h4><span class="int-state" id="intStep1State">Not set</span></div>
+                  <div class="int-step-head"><h4>Bot token</h4></div>
                   <label class="field">Bot Token <span class="hint" id="botTokenHint"></span>
                     <div class="in-wrap">
                       <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
@@ -1482,7 +1427,7 @@ export const UI_HTML = `<!DOCTYPE html>
                 </section>
 
                 <section class="int-step" aria-label="Step 2 Group or Channel">
-                  <div class="int-step-head"><h4>Group or Channel</h4><span class="int-state" id="intStep2State">Not set</span></div>
+                  <div class="int-step-head"><h4>Group or Channel</h4></div>
                   <label class="field">Group / Channel ID
                     <div class="in-wrap">
                       <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -1490,18 +1435,6 @@ export const UI_HTML = `<!DOCTYPE html>
                     </div>
                   </label>
                   <p class="int-hint">Saving sets this as the active group.</p>
-                </section>
-
-                <section class="int-step" aria-label="Step 3 Admin rights in the group">
-                  <div class="int-step-head"><h4>Admin rights in the group</h4><span class="int-state" id="intStep3State">Not checked</span></div>
-                  <div class="int-checks">
-                    <div class="int-check" id="diagInviteRow"><span class="live-dot" id="diagInviteDot"></span><div><b>Invite users via link</b><span id="diagInviteTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
-                    <!-- Ban / restrict + Delete are never auto-checked: /api/telegram/inspect returns no can_restrict_members / can_delete_messages field. -->
-                    <div class="int-check" id="diagBanRow"><span class="live-dot" id="diagBanDot"></span><div><b>Ban / restrict members</b><span id="diagBanTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
-                    <div class="int-check" id="diagDeleteRow"><span class="live-dot" id="diagDeleteDot"></span><div><b>Delete messages</b><span id="diagDeleteTitle">–</span></div><span class="perm-tag">OPTIONAL</span></div>
-                    <!-- Kept from PR #2: extra honest row; inspect has no removal-rights field, so it stays Not checked. -->
-                    <div class="int-check" id="diagRemoveRow"><span class="live-dot" id="diagRemoveDot"></span><div><b>Can remove expired members</b><span id="diagRemoveTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
-                  </div>
                 </section>
 
                 <section class="int-step locked" id="intStep4Block" aria-label="Step 4 Event tracking">
@@ -1548,18 +1481,12 @@ export const UI_HTML = `<!DOCTYPE html>
                   <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
                 </div>
                 <h3 class="card-title">Phone Account (MTProto)</h3>
-                <button class="btn btn-sm" type="button" onclick="testConnections()" style="margin-left:auto">Check Status</button>
               </div>
               <div class="card-body">
 
-                <div class="status-strip">
-                  <div class="status-chip"><span class="live-dot" id="diagMtDot"></span><span id="diagMtTitle">Account: Not signed in</span></div>
-                </div>
-
                 <div class="pool-list" id="mtPoolList"></div>
 
-                <section class="int-step" aria-label="Step 1 Telegram app credentials">
-                  <div class="int-step-head"><h4>Telegram app credentials</h4><span class="int-state">Step 1</span></div>
+                <section class="int-step">
                   <div class="two">
                     <label class="field">API ID
                       <div class="in-wrap">
@@ -1576,8 +1503,7 @@ export const UI_HTML = `<!DOCTYPE html>
                   </div>
                 </section>
 
-                <section class="int-step" aria-label="Step 2 Sign in with your number">
-                  <div class="int-step-head"><h4>Sign in with your number</h4><span class="int-state">Step 2</span></div>
+                <section class="int-step">
                   <div class="two">
                     <label class="field">Helper Account Label
                       <div class="in-wrap">
@@ -1655,16 +1581,28 @@ export const UI_HTML = `<!DOCTYPE html>
               </div>
               <div class="card">
                 <div class="card-head">
-                  <h3 class="card-title">How the flow works</h3>
+                  <h3 class="card-title">Admin rights in the group</h3>
+                  <span class="int-state" id="intStep3State" style="margin-left:auto">Not checked</span>
                 </div>
-                <div class="card-body" style="gap:0">
-                  <ol class="flow-list">
-                    <li><span class="flow-num">1</span><b>You create a safe link</b></li>
-                    <li><span class="flow-num">2</span><b>Customer taps the link</b></li>
-                    <li><span class="flow-num">3</span><b>Bot approves &amp; logs it</b></li>
-                    <li><span class="flow-num">4</span><b>Leave or expiry</b></li>
-                  </ol>
+                <div class="card-body" style="gap:8px">
+                  <div class="int-checks">
+                    <div class="int-check" id="diagInviteRow"><span class="live-dot" id="diagInviteDot"></span><div><b>Invite users via link</b><span id="diagInviteTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
+                    <!-- Ban / restrict + Delete are never auto-checked: /api/telegram/inspect returns no can_restrict_members / can_delete_messages field. -->
+                    <div class="int-check" id="diagBanRow"><span class="live-dot" id="diagBanDot"></span><div><b>Ban / restrict members</b><span id="diagBanTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
+                    <div class="int-check" id="diagDeleteRow"><span class="live-dot" id="diagDeleteDot"></span><div><b>Delete messages</b><span id="diagDeleteTitle">–</span></div><span class="perm-tag">OPTIONAL</span></div>
+                    <!-- Kept from PR #2: extra honest row; inspect has no removal-rights field, so it stays Not checked. -->
+                    <div class="int-check" id="diagRemoveRow"><span class="live-dot" id="diagRemoveDot"></span><div><b>Can remove expired members</b><span id="diagRemoveTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
+                  </div>
                 </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head">
+                <h3 class="card-title">Phone health</h3>
+                <button class="btn btn-sm" type="button" onclick="testConnections()" style="margin-left:auto">Re-check</button>
+              </div>
+              <div class="card-body" style="gap:8px">
+                <div class="int-check"><span class="live-dot" id="diagMtDot"></span><div><b>Phone account</b><span id="diagMtTitle">Account: Not signed in</span></div></div>
               </div>
             </div>
             <div class="card" id="intRailMt" style="display:none">
@@ -1752,6 +1690,7 @@ let appData = null;
 let activeLoginId = null;
 let lastWebhookUrl = '';
 let botVerified = false;
+let mtVerified = false;
 
 const MENU_META = {
   option1: 'Option 1 · Safe Invite Link',
@@ -1759,6 +1698,7 @@ const MENU_META = {
   bulk: 'Bulk CSV Queue',
   status: 'Activity & Status',
   integrate: 'Integrate Telegram',
+  group: 'Group',
 };
 
 function openIntegrateTab(tab) {
@@ -1908,7 +1848,7 @@ function pickO1Mode(mode) {
 
 function openMenu(name) {
   activeMenu = name;
-  ['option1', 'option2', 'bulk', 'status', 'integrate'].forEach(m => {
+  ['option1', 'option2', 'bulk', 'status', 'integrate', 'group'].forEach(m => {
     const el = $('menu-' + m);
     el.style.display = m === name ? 'block' : 'none';
     if (m === name) {
@@ -1921,11 +1861,8 @@ function openMenu(name) {
     btn.classList.toggle('active', btn.dataset.menu === name);
   });
   $('topMenuTitle').textContent = MENU_META[name] || MENU_META.option1;
-  // The two topbar buttons live in the shared topbar: hide them on this
-  // page only (the setup button just re-opens this page); other views keep them.
-  const onIntegrate = name === 'integrate';
-  if ($('syncBtn')) $('syncBtn').style.display = onIntegrate ? 'none' : '';
-  if ($('setupBtn')) $('setupBtn').style.display = onIntegrate ? 'none' : '';
+  if (name === 'group') renderGroupList();
+  if (name === 'integrate') startIntHealthRecheck(); else stopIntHealthRecheck();
 }
 
 function openStatusFilter(filter) {
@@ -1964,57 +1901,58 @@ function computeCounts(rows) {
   return { all: rows.length, link, success, failed, left };
 }
 
-function renderGroupProfileBar() {
-  if (!appData) return;
-  const groups = appData.savedGroups || [];
-  const activeId = (appData.config && appData.config.chatId) || '';
-  const sel = $('savedGroupSelect');
-  sel.innerHTML = '<option value="">-- Select Saved Group (' + groups.length + ') --</option>' +
-    groups.map(g => {
-      const mTxt = (g.memberCount !== null && g.memberCount !== undefined) ? ' · ' + Number(g.memberCount).toLocaleString() + ' members' : '';
-      const uTxt = g.username ? ' (@' + g.username + ')' : '';
-      return '<option value="' + esc(g.id) + '">' + esc(g.title + uTxt + mTxt) + '</option>';
-    }).join('');
+function renderGroupList() {
+  const wrap = $('groupListWrap');
+  if (!wrap) return;
+  const groups = (appData && appData.savedGroups) || [];
+  const activeId = (appData && appData.config && appData.config.chatId) || '';
+  $('groupListCount').textContent = groups.length + (groups.length === 1 ? ' group' : ' groups');
+  $('navGroupCount').textContent = groups.length;
+  const activeMatch = groups.find(g => g.id === activeId || (g.username && '@' + g.username === activeId) || g.inputRef === activeId) || groups[0] || null;
+  const o1ChatEl = $('o1Chat');
+  if (o1ChatEl) o1ChatEl.placeholder = activeMatch ? 'Using: ' + (activeMatch.title || activeMatch.id) : 'Uses active saved group';
+  if (!groups.length) {
+    wrap.innerHTML = '<div class="guide-note"><span>No groups saved yet. Paste a Group ID (-100...) or @username above, then click + Save Group.</span></div>';
+    return;
+  }
+  wrap.innerHTML = groups.map(g => {
+    const isActive = g.id === activeId || (g.username && '@' + g.username === activeId) || g.inputRef === activeId;
+    const members = (g.memberCount !== null && g.memberCount !== undefined) ? Number(g.memberCount).toLocaleString() + ' members' : '';
+    const status = g.canInvite ? ['tag tag-green', 'Admin Ready'] : g.isAdmin ? ['tag tag-amber', 'Need Invite Right'] : ['tag tag-amber', 'Check Bot Admin'];
+    const sub = [(g.username ? '@' + g.username : ''), 'ID ' + g.id + (g.type ? ' · ' + g.type : ''), members].filter(Boolean).join(' · ');
+    return '<div class="pool-row">' +
+      '<div class="group-avatar">' + esc(String(g.title || 'TG').trim().slice(0, 2).toUpperCase()) + '</div>' +
+      '<div class="pool-info"><b>' + esc(g.title || g.id) + (isActive ? ' <span class="tag tag-brand">Active</span>' : '') + '</b><span>' + esc(sub) + '</span></div>' +
+      '<span class="' + status[0] + '">' + status[1] + '</span>' +
+      (isActive
+        ? '<button type="button" class="btn btn-sm" disabled>Active</button>'
+        : '<button type="button" class="btn btn-sm btn-primary" data-gid="' + esc(g.id) + '" onclick="selectSavedGroup(this.dataset.gid)">Select</button>') +
+      '<button type="button" class="btn btn-sm" data-gid="' + esc(g.id) + '" onclick="refreshActiveGroup(this.dataset.gid)">Refresh</button>' +
+      '<button type="button" class="btn btn-sm" data-gid="' + esc(g.id) + '" onclick="removeCurrentGroup(this.dataset.gid)">Remove</button>' +
+    '</div>';
+  }).join('');
+}
 
-  const match = groups.find(g => g.id === activeId || (g.username && '@' + g.username === activeId) || g.inputRef === activeId) || groups[0] || null;
-  if (match) sel.value = match.id;
-
-  if (match) {
-    $('groupProfileName').textContent = match.title || match.id;
-    $('groupProfileHandle').textContent = (match.username ? '@' + match.username + ' · ' : '') + 'ID ' + match.id + (match.type ? ' · ' + match.type : '');
-    if (match.memberCount !== null && match.memberCount !== undefined) {
-      $('groupProfileMembers').style.display = 'inline-flex';
-      $('groupProfileMembers').textContent = Number(match.memberCount).toLocaleString() + ' members';
-    } else {
-      $('groupProfileMembers').style.display = 'none';
-    }
-    const statusBadge = $('groupProfileStatus');
-    statusBadge.style.display = 'inline-flex';
-    if (match.canInvite) {
-      statusBadge.className = 'tag tag-green';
-      statusBadge.textContent = 'Admin Ready';
-    } else if (match.isAdmin) {
-      statusBadge.className = 'tag tag-amber';
-      statusBadge.textContent = 'Need Invite Right';
-    } else {
-      statusBadge.className = 'tag tag-amber';
-      statusBadge.textContent = 'Check Bot Admin';
-    }
-    if (match.photoDataUrl) {
-      $('groupAvatarWrap').innerHTML = '<img src="' + esc(match.photoDataUrl) + '" alt="" />';
-    } else {
-      $('groupAvatarWrap').textContent = String(match.title || 'TG').trim().slice(0, 2).toUpperCase();
-    }
-    $('removeGroupBtn').style.display = 'inline-flex';
-    $('o1Chat').placeholder = 'Using: ' + match.title;
-  } else {
-    $('groupAvatarWrap').textContent = 'TG';
-    $('groupProfileName').textContent = activeId ? ('Group ' + activeId) : 'No Group Selected';
-    $('groupProfileHandle').textContent = activeId ? 'Click Save Group or Verify Bot to load photo & member count' : 'Save a Group / Channel to see photo, @username & member count';
-    $('groupProfileMembers').style.display = 'none';
-    $('groupProfileStatus').style.display = 'none';
-    $('removeGroupBtn').style.display = 'none';
-    $('o1Chat').placeholder = 'Uses active saved group';
+async function saveGroupFromList() {
+  const chatId = $('groupListNewId').value.trim();
+  if (!chatId) return toast('Enter a Telegram Group ID (-100...) or @username', 'err');
+  const btn = $('groupListSaveBtn');
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/groups/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chatId, select: true }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not save group profile');
+    $('groupListNewId').value = '';
+    toast('Saved ' + (data.group ? data.group.title : chatId), 'ok');
+    await refreshStatus(true);
+  } catch (err) {
+    toast(err.message, 'err');
+  } finally {
+    btn.disabled = false;
   }
 }
 
@@ -2025,7 +1963,7 @@ function renderMtprotoPool() {
 
   if (!stats.length) {
     $('o2PoolText').textContent = 'Account Pool: No helper phone linked yet';
-    $('mtPoolList').innerHTML = '<div class="guide-note" style="background:var(--canvas);border-color:var(--line)"><span>No Option 2 accounts linked yet. Sign in below to add your first account (you can add 2–3 for automatic rotation).</span></div>';
+    $('mtPoolList').innerHTML = '';
     return;
   }
 
@@ -2108,7 +2046,6 @@ function renderAll() {
     $('intTestBtn').disabled = !botVerified;
     $('intEnableBtn').disabled = !botVerified && !appData.pollingEnabled;
     $('intEnableBtn').textContent = appData.pollingEnabled ? 'Pause Listener' : 'Enable Listener';
-    $('syncBtn').disabled = !botVerified;
     $('healthEventsTitle').textContent = appData.pollingEnabled ? 'Live' : (lastWebhookUrl ? 'Webhook' : '—');
     $('healthEventsDot').className = 'live-dot' + ((appData.pollingEnabled || lastWebhookUrl) ? ' ok' : '');
     $('listenerModeNote').textContent = appData.pollingEnabled
@@ -2120,7 +2057,7 @@ function renderAll() {
           : 'No listener active yet — enable Local Listener or set a Webhook to receive join requests.';
   }
 
-  renderGroupProfileBar();
+  renderGroupList();
   renderMtprotoPool();
   renderStatusTable();
   renderBulkQueue();
@@ -2259,7 +2196,7 @@ function hydrateConfigForm() {
   if (!appData || !appData.config) return;
   const c = appData.config;
   $('cfgChatId').value = c.chatId || '';
-  $('botTokenHint').textContent = c.botTokenSet ? '(Saved: ' + c.botTokenPreview + ')' : '(Not set)';
+  $('botTokenHint').textContent = c.botTokenSet ? '(Saved: ' + c.botTokenPreview + ')' : '';
   $('cfgApiId').value = c.apiId || '';
   $('apiHashHint').textContent = c.apiHashSet ? '(Saved: ' + c.apiHashPreview + ')' : '(Not set)';
   $('cfgMaxHour').value = c.limits.maxInvitesPerHour;
@@ -2275,46 +2212,6 @@ function hydrateConfigForm() {
       $('bulkVipDays').value = String(appData.bulkQueue.vipDays);
       $('bulkAutoRemove').checked = Boolean(appData.bulkQueue.autoRemove);
     }
-  }
-}
-
-function toggleAddGroupDrawer() {
-  const drawer = $('groupAddDrawer');
-  const open = !drawer.classList.contains('open');
-  drawer.classList.toggle('open', open);
-  if (open) {
-    const active = ($('cfgChatId') && $('cfgChatId').value.trim()) || '';
-    if (!$('newGroupChatId').value.trim() && active && (!(appData && appData.savedGroups && appData.savedGroups.length))) {
-      $('newGroupChatId').value = active;
-    }
-    $('newGroupChatId').focus();
-  }
-}
-
-async function saveNewGroup() {
-  const chatId = $('newGroupChatId').value.trim();
-  if (!chatId) return toast('Enter a Telegram Group ID (-100...) or @username', 'err');
-  const btn = $('saveGroupBtn');
-  btn.disabled = true;
-  try {
-    const res = await fetch('/api/groups/save', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatId, select: true }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Could not save group profile');
-    $('newGroupChatId').value = '';
-    $('groupAddDrawer').classList.remove('open');
-    const membersTxt = (data.group && data.group.memberCount !== null && data.group.memberCount !== undefined)
-      ? ' (' + Number(data.group.memberCount).toLocaleString() + ' members)'
-      : '';
-    toast('Saved ' + (data.group ? data.group.title : chatId) + membersTxt, 'ok');
-    await refreshStatus(true);
-  } catch (err) {
-    toast(err.message, 'err');
-  } finally {
-    btn.disabled = false;
   }
 }
 
@@ -2336,38 +2233,35 @@ async function selectSavedGroup(chatId) {
   }
 }
 
-async function refreshActiveGroup() {
-  const chatId = $('savedGroupSelect').value || (appData && appData.config && appData.config.chatId) || '';
-  if (!chatId) {
-    toggleAddGroupDrawer();
-    return;
-  }
+async function refreshActiveGroup(chatId) {
+  const id = chatId || (appData && appData.config && appData.config.chatId) || '';
+  if (!id) return toast('No group saved yet — add one in the Group menu', 'err');
   try {
     const res = await fetch('/api/groups/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatId }),
+      body: JSON.stringify({ chatId: id }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to refresh group');
     const membersTxt = (data.group && data.group.memberCount !== null && data.group.memberCount !== undefined)
       ? ' · ' + Number(data.group.memberCount).toLocaleString() + ' members'
       : '';
-    toast('Refreshed: ' + (data.group ? data.group.title : chatId) + membersTxt, 'ok');
+    toast('Refreshed: ' + (data.group ? data.group.title : id) + membersTxt, 'ok');
     refreshStatus(false);
   } catch (err) {
     toast(err.message, 'err');
   }
 }
 
-async function removeCurrentGroup() {
-  const chatId = $('savedGroupSelect').value || '';
-  if (!chatId) return;
+async function removeCurrentGroup(chatId) {
+  const id = chatId || '';
+  if (!id) return;
   try {
     const res = await fetch('/api/groups/remove', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatId }),
+      body: JSON.stringify({ chatId: id }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to remove saved group');
@@ -2843,11 +2737,38 @@ async function saveMtprotoConfig(e) {
 }
 
 let verifyInFlight = false;
-async function testConnections() {
+// Connection health auto-recheck: every 60s, only while the Integrate page
+// is open, only after a successful verification (bot or phone), and never
+// overlapping (testConnections() has the verifyInFlight guard). 60s is safe:
+// one inspect is ~5 light Bot API calls (~300/hour), far below Telegram's
+// ~30 requests/second per-bot limit. Auto-checks are silent so they
+// never spam toasts; manual checks still show the verifying toast.
+const INT_HEALTH_RECHECK_MS = 60000;
+let intHealthTimer = null;
+function shouldRecheckIntHealth() {
+  const intPage = $('menu-integrate');
+  return (botVerified || mtVerified) && !document.hidden && intPage && intPage.style.display !== 'none';
+}
+function startIntHealthRecheck() {
+  stopIntHealthRecheck();
+  if (!shouldRecheckIntHealth()) return;
+  intHealthTimer = setInterval(() => {
+    if (!shouldRecheckIntHealth()) { stopIntHealthRecheck(); return; }
+    testConnections(true);
+  }, INT_HEALTH_RECHECK_MS);
+}
+function stopIntHealthRecheck() {
+  if (intHealthTimer) { clearInterval(intHealthTimer); intHealthTimer = null; }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopIntHealthRecheck();
+  else startIntHealthRecheck();
+});
+async function testConnections(silent) {
   if (verifyInFlight) return;
   verifyInFlight = true;
   try {
-  toast('Verifying Telegram connection…', 'ok');
+  if (!silent) toast('Verifying Telegram connection…', 'ok');
   const res = await fetch('/api/telegram/inspect');
   const d = await res.json();
 
@@ -2879,10 +2800,6 @@ async function testConnections() {
   const intConnError = Boolean((d.bot && d.bot.error) || (d.bot && d.bot.connected && !d.bot.chat));
   $('intConnPill').textContent = botVerified ? 'Connected' : intConnError ? 'Error' : 'Not connected';
   $('intConnPill').className = 'pill ' + (botVerified ? 'pill-green' : intConnError ? 'pill-red' : 'pill-amber');
-  $('intStep1State').textContent = (d.bot && d.bot.connected) ? 'Set' : 'Not set';
-  $('intStep1State').className = 'int-state' + ((d.bot && d.bot.connected) ? ' ok' : '');
-  $('intStep2State').textContent = (d.bot && d.bot.chat) ? d.bot.chat.title : 'Not set';
-  $('intStep2State').className = 'int-state' + ((d.bot && d.bot.chat) ? ' ok' : '');
   $('intStep3State').textContent = (d.bot && d.bot.chat) ? 'Checked' : 'Not checked';
   $('intStep3State').className = 'int-state' + ((d.bot && d.bot.chat) ? ' ok' : '');
   $('intStep4State').textContent = botVerified ? 'Ready' : 'Locked until verified';
@@ -2890,6 +2807,7 @@ async function testConnections() {
   $('intStep4Block').classList.toggle('locked', !botVerified);
   updateIntStepper(d);
 
+  mtVerified = Boolean(d.mtproto && d.mtproto.connected);
   if (d.mtproto && d.mtproto.connected) {
     if (d.mtproto.accounts && d.mtproto.accounts.length > 1) {
       const okCount = d.mtproto.accounts.filter(a => a.connected).length;
@@ -2903,6 +2821,7 @@ async function testConnections() {
     $('diagMtDot').className = 'live-dot';
     $('diagMtTitle').textContent = (d.mtproto && d.mtproto.error) ? d.mtproto.error : 'Account: Not signed in';
   }
+  if (botVerified || mtVerified) startIntHealthRecheck(); else stopIntHealthRecheck();
   refreshStatus(false);
   } finally { verifyInFlight = false; }
 }
@@ -2934,22 +2853,6 @@ async function togglePolling() {
   toast(data.pollingEnabled ? 'Local Listener enabled!' : 'Local Listener paused', 'ok');
   if (data.pollingEnabled) lastWebhookUrl = '';
   refreshStatus(false);
-}
-
-async function syncNow() {
-  const btn = $('syncBtn');
-  btn.disabled = true;
-  try {
-    const res = await fetch('/api/telegram/sync', { method:'POST' });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-    toast('Synced ' + data.processed + ' Telegram event(s)', 'ok');
-    refreshStatus(false);
-  } catch (err) {
-    toast(err.message, 'err');
-  } finally {
-    btn.disabled = !botVerified;
-  }
 }
 
 async function setWebhook() {
