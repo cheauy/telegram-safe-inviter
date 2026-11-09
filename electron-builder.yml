@@ -1,0 +1,54 @@
+# Tenh Gram — Windows desktop build (electron-builder)
+appId: com.tenhgram.app
+productName: Tenh Gram
+copyright: Copyright © 2026 Tenh Gram
+
+directories:
+  output: dist
+  buildResources: electron/build
+
+files:
+  - package.json
+  - electron/**/*
+  - src/**/*
+  - public/**/*
+
+# The app ships as a single asar archive. User data is NOT inside it:
+# accounts/sessions live in %APPDATA%\Tenh Gram\data (see electron/main.cjs).
+asar: true
+
+# No native rebuild: the only native optional dep (bufferutil, via ws) has a
+# pure-JS fallback, so the user does not need Visual Studio Build Tools.
+npmRebuild: false
+
+win:
+  icon: electron/build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+
+# 1-click updates: electron-updater checks GitHub Releases for a newer
+# version. `npm run dist:win` writes dist/latest.yml (the update feed)
+# alongside the installers. The portable .exe cannot update itself in
+# place — only the NSIS-installed app auto-updates (see ELECTRON.md).
+publish:
+  provider: github
+  owner: cheauy
+  repo: telegram-safe-inviter
+  releaseType: release
+
+nsis:
+  # Per-user install (no admin rights needed): installs under
+  # %LOCALAPPDATA%\Programs\Tenh Gram by default.
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Tenh Gram
+  artifactName: TenhGram-Setup-${version}.${ext}
+
+portable:
+  artifactName: TenhGram-Portable-${version}.${ext}

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "electron/main.cjs",
   "engines": {
     "node": ">=22.0.0"
   },
@@ -10,9 +11,17 @@
     "start": "node --env-file-if-exists=.env src/server.js",
     "dev": "node --env-file-if-exists=.env --watch src/server.js",
     "login:mtproto": "node --env-file-if-exists=.env src/mtprotoLogin.js",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "desktop": "electron .",
+    "desktop:dev": "electron .",
+    "dist:win": "node electron/build-icon.cjs && electron-builder --win"
   },
   "dependencies": {
+    "electron-updater": "^6.8.11",
     "telegram": "^2.26.22"
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.0"
   }
 }
