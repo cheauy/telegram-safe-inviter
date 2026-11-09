@@ -578,11 +578,6 @@ export const UI_HTML = `<!DOCTYPE html>
   .adv-details summary{cursor:pointer;font-size:12.5px;font-weight:600;color:var(--brand);list-style:none;display:flex;align-items:center;gap:7px}
   .adv-details summary::-webkit-details-marker{display:none}
   .adv-details[open] summary{margin-bottom:12px}
-.flow-list{list-style:none;display:grid}
-.flow-list li{display:flex;align-items:center;gap:11px;padding:9px 2px}
-.flow-list li + li{border-top:1px solid var(--line)}
-.flow-num{width:24px;height:24px;border-radius:50%;background:var(--brand-soft);color:var(--brand);font-size:12px;font-weight:800;display:grid;place-items:center;flex-shrink:0}
-.flow-list b{font-size:13px;font-weight:600}
 .vs-row{display:grid;gap:3px;padding:10px 2px}
 .vs-row + .vs-row{border-top:1px solid var(--line)}
 .vs-row b{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--brand)}
@@ -1427,7 +1422,7 @@ export const UI_HTML = `<!DOCTYPE html>
               <form class="card-body" onsubmit="saveBotConfig(event)">
 
                 <section class="int-step" aria-label="Step 1 Bot token">
-                  <div class="int-step-head"><h4>Bot token</h4><span class="int-state" id="intStep1State">Not set</span></div>
+                  <div class="int-step-head"><h4>Bot token</h4></div>
                   <label class="field">Bot Token <span class="hint" id="botTokenHint"></span>
                     <div class="in-wrap">
                       <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
@@ -1438,7 +1433,7 @@ export const UI_HTML = `<!DOCTYPE html>
                 </section>
 
                 <section class="int-step" aria-label="Step 2 Group or Channel">
-                  <div class="int-step-head"><h4>Group or Channel</h4><span class="int-state" id="intStep2State">Not set</span></div>
+                  <div class="int-step-head"><h4>Group or Channel</h4></div>
                   <label class="field">Group / Channel ID
                     <div class="in-wrap">
                       <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -1446,18 +1441,6 @@ export const UI_HTML = `<!DOCTYPE html>
                     </div>
                   </label>
                   <p class="int-hint">Saving sets this as the active group.</p>
-                </section>
-
-                <section class="int-step" aria-label="Step 3 Admin rights in the group">
-                  <div class="int-step-head"><h4>Admin rights in the group</h4><span class="int-state" id="intStep3State">Not checked</span></div>
-                  <div class="int-checks">
-                    <div class="int-check" id="diagInviteRow"><span class="live-dot" id="diagInviteDot"></span><div><b>Invite users via link</b><span id="diagInviteTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
-                    <!-- Ban / restrict + Delete are never auto-checked: /api/telegram/inspect returns no can_restrict_members / can_delete_messages field. -->
-                    <div class="int-check" id="diagBanRow"><span class="live-dot" id="diagBanDot"></span><div><b>Ban / restrict members</b><span id="diagBanTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
-                    <div class="int-check" id="diagDeleteRow"><span class="live-dot" id="diagDeleteDot"></span><div><b>Delete messages</b><span id="diagDeleteTitle">–</span></div><span class="perm-tag">OPTIONAL</span></div>
-                    <!-- Kept from PR #2: extra honest row; inspect has no removal-rights field, so it stays Not checked. -->
-                    <div class="int-check" id="diagRemoveRow"><span class="live-dot" id="diagRemoveDot"></span><div><b>Can remove expired members</b><span id="diagRemoveTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
-                  </div>
                 </section>
 
                 <section class="int-step locked" id="intStep4Block" aria-label="Step 4 Event tracking">
@@ -1611,15 +1594,18 @@ export const UI_HTML = `<!DOCTYPE html>
               </div>
               <div class="card">
                 <div class="card-head">
-                  <h3 class="card-title">How the flow works</h3>
+                  <h3 class="card-title">Admin rights in the group</h3>
+                  <span class="int-state" id="intStep3State" style="margin-left:auto">Not checked</span>
                 </div>
-                <div class="card-body" style="gap:0">
-                  <ol class="flow-list">
-                    <li><span class="flow-num">1</span><b>You create a safe link</b></li>
-                    <li><span class="flow-num">2</span><b>Customer taps the link</b></li>
-                    <li><span class="flow-num">3</span><b>Bot approves &amp; logs it</b></li>
-                    <li><span class="flow-num">4</span><b>Leave or expiry</b></li>
-                  </ol>
+                <div class="card-body" style="gap:8px">
+                  <div class="int-checks">
+                    <div class="int-check" id="diagInviteRow"><span class="live-dot" id="diagInviteDot"></span><div><b>Invite users via link</b><span id="diagInviteTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
+                    <!-- Ban / restrict + Delete are never auto-checked: /api/telegram/inspect returns no can_restrict_members / can_delete_messages field. -->
+                    <div class="int-check" id="diagBanRow"><span class="live-dot" id="diagBanDot"></span><div><b>Ban / restrict members</b><span id="diagBanTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
+                    <div class="int-check" id="diagDeleteRow"><span class="live-dot" id="diagDeleteDot"></span><div><b>Delete messages</b><span id="diagDeleteTitle">–</span></div><span class="perm-tag">OPTIONAL</span></div>
+                    <!-- Kept from PR #2: extra honest row; inspect has no removal-rights field, so it stays Not checked. -->
+                    <div class="int-check" id="diagRemoveRow"><span class="live-dot" id="diagRemoveDot"></span><div><b>Can remove expired members</b><span id="diagRemoveTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1879,6 +1865,7 @@ function openMenu(name) {
   });
   $('topMenuTitle').textContent = MENU_META[name] || MENU_META.option1;
   if (name === 'group') renderGroupList();
+  if (name === 'integrate') startIntHealthRecheck(); else stopIntHealthRecheck();
 }
 
 function openStatusFilter(filter) {
@@ -2212,7 +2199,7 @@ function hydrateConfigForm() {
   if (!appData || !appData.config) return;
   const c = appData.config;
   $('cfgChatId').value = c.chatId || '';
-  $('botTokenHint').textContent = c.botTokenSet ? '(Saved: ' + c.botTokenPreview + ')' : '(Not set)';
+  $('botTokenHint').textContent = c.botTokenSet ? '(Saved: ' + c.botTokenPreview + ')' : '';
   $('cfgApiId').value = c.apiId || '';
   $('apiHashHint').textContent = c.apiHashSet ? '(Saved: ' + c.apiHashPreview + ')' : '(Not set)';
   $('cfgMaxHour').value = c.limits.maxInvitesPerHour;
@@ -2753,11 +2740,38 @@ async function saveMtprotoConfig(e) {
 }
 
 let verifyInFlight = false;
-async function testConnections() {
+// Connection health auto-recheck: every 60s, only while the Integrate page
+// is open, only after a successful verification, and never overlapping
+// (testConnections() has the verifyInFlight guard). 60s is safe: one
+// inspect is ~5 light Bot API calls (~300/hour), far below Telegram's
+// ~30 requests/second per-bot limit. Auto-checks are silent so they
+// never spam toasts; manual checks still show the verifying toast.
+const INT_HEALTH_RECHECK_MS = 60000;
+let intHealthTimer = null;
+function shouldRecheckIntHealth() {
+  const intPage = $('menu-integrate');
+  return botVerified && !document.hidden && intPage && intPage.style.display !== 'none';
+}
+function startIntHealthRecheck() {
+  stopIntHealthRecheck();
+  if (!shouldRecheckIntHealth()) return;
+  intHealthTimer = setInterval(() => {
+    if (!shouldRecheckIntHealth()) { stopIntHealthRecheck(); return; }
+    testConnections(true);
+  }, INT_HEALTH_RECHECK_MS);
+}
+function stopIntHealthRecheck() {
+  if (intHealthTimer) { clearInterval(intHealthTimer); intHealthTimer = null; }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopIntHealthRecheck();
+  else startIntHealthRecheck();
+});
+async function testConnections(silent) {
   if (verifyInFlight) return;
   verifyInFlight = true;
   try {
-  toast('Verifying Telegram connection…', 'ok');
+  if (!silent) toast('Verifying Telegram connection…', 'ok');
   const res = await fetch('/api/telegram/inspect');
   const d = await res.json();
 
@@ -2789,14 +2803,11 @@ async function testConnections() {
   const intConnError = Boolean((d.bot && d.bot.error) || (d.bot && d.bot.connected && !d.bot.chat));
   $('intConnPill').textContent = botVerified ? 'Connected' : intConnError ? 'Error' : 'Not connected';
   $('intConnPill').className = 'pill ' + (botVerified ? 'pill-green' : intConnError ? 'pill-red' : 'pill-amber');
-  $('intStep1State').textContent = (d.bot && d.bot.connected) ? 'Set' : 'Not set';
-  $('intStep1State').className = 'int-state' + ((d.bot && d.bot.connected) ? ' ok' : '');
-  $('intStep2State').textContent = (d.bot && d.bot.chat) ? d.bot.chat.title : 'Not set';
-  $('intStep2State').className = 'int-state' + ((d.bot && d.bot.chat) ? ' ok' : '');
   $('intStep3State').textContent = (d.bot && d.bot.chat) ? 'Checked' : 'Not checked';
   $('intStep3State').className = 'int-state' + ((d.bot && d.bot.chat) ? ' ok' : '');
   $('intStep4State').textContent = botVerified ? 'Ready' : 'Locked until verified';
   $('intStep4State').className = 'int-state' + (botVerified ? ' ok' : ' locked');
+  if (botVerified) startIntHealthRecheck(); else stopIntHealthRecheck();
   $('intStep4Block').classList.toggle('locked', !botVerified);
   updateIntStepper(d);
 
