@@ -764,12 +764,8 @@ export function createServer() {
   });
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  createServer().listen(PORT, () => {
-    console.log(`Tenh Gram (Option 1 + Option 2) running on http://localhost:${PORT}`);
-  });
-
-  setInterval(() => {
+export function startBackgroundTasks() {
+  const timer = setInterval(() => {
     const now = Date.now();
     for (const u of listUsers()) {
       const state = loadState(u.id);
@@ -788,4 +784,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
       }
     }
   }, 5000);
+  return () => clearInterval(timer);
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  createServer().listen(PORT, () => {
+    console.log(`Tenh Gram (Option 1 + Option 2) running on http://localhost:${PORT}`);
+  });
+
+  startBackgroundTasks();
 }
