@@ -1943,7 +1943,10 @@ function setStatusFilter(filter) {
 }
 
 function getRows() {
-  return (appData && appData.history) || [];
+  // Bot link failures are not shown in status: a failed link creation (e.g. chat
+  // not found) is reported where it happens — the Test Invite / Option 1 result
+  // box and the error toast — and must not appear as a status row or count.
+  return ((appData && appData.history) || []).filter(r => r.status !== 'BOT_LINK_FAILED');
 }
 
 function getVipRows() {
