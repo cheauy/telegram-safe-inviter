@@ -310,6 +310,7 @@ export const UI_HTML = `<!DOCTYPE html>
   .live-dot.pulsing{background:var(--green);animation:pulseRing 2s infinite}
   .live-dot.ok{background:var(--green)}
   .live-dot.warn{background:var(--amber)}
+  .live-dot.err{background:var(--red)}
 
   /* Buttons — Primary White + #16537e Hover */
   .btn{
@@ -366,6 +367,7 @@ export const UI_HTML = `<!DOCTYPE html>
   .pill{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap}
   .pill-green{background:var(--green-50);color:var(--green);border:1px solid var(--green-100)}
   .pill-amber{background:var(--amber-50);color:var(--amber);border:1px solid var(--amber-100)}
+  .pill-red{background:var(--red-50);color:var(--red);border:1px solid var(--red-100)}
   .card-body{padding:20px;display:grid;gap:14px}
 
   /* Visual Stepper */
@@ -557,6 +559,8 @@ export const UI_HTML = `<!DOCTYPE html>
 .int-check.ok span{color:#0f5c43}
 .int-check.warn{border-color:var(--amber-100);background:var(--amber-50)}
 .int-check.warn span{color:var(--amber)}
+.int-check.err{border-color:var(--red-100);background:var(--red-50)}
+.int-check.err span{color:var(--red)}
 .int-check .perm-tag{display:inline-block;margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
 .int-check .perm-tag.req{color:var(--warn)}
 .int-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -686,7 +690,7 @@ export const UI_HTML = `<!DOCTYPE html>
 
   .toasts{position:fixed;bottom:56px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:70;max-width:360px}
   .toast{padding:11px 15px;border-radius:10px;background:#0f172a;color:#fff;font-size:13px;font-weight:500;box-shadow:0 10px 28px rgba(15,23,42,.22);animation:toastPop .2s var(--ease)}
-  .toast.ok{background:var(--brand)}
+  .toast.ok{background:var(--green)}
   .toast.err{background:var(--red)}
 
   @media(max-width:1060px){.kpi-strip{grid-template-columns:repeat(2,1fr)}.focus-grid,.grid-2{grid-template-columns:1fr}}
@@ -1727,11 +1731,24 @@ function openIntegrateTab(tab) {
 }
 
 function toast(msg, kind) {
+  const cls = 'toast ' + (kind || 'ok');
+  // Never show the same alert twice: if an identical toast is already
+  // visible, just restart its timer instead of stacking a duplicate.
+  const box = $('toasts');
+  for (const old of box.querySelectorAll('.toast')) {
+    if (old.textContent === msg && old.className === cls) {
+      clearTimeout(old._toastTimer);
+      old.style.opacity = '1'; old.style.transition = '';
+      old._toastTimer = setTimeout(() => { old.style.opacity = '0'; old.style.transition = 'opacity .25s'; setTimeout(() => old.remove(), 260); }, 3400);
+      return;
+    }
+  }
   const el = document.createElement('div');
-  el.className = 'toast ' + (kind || 'ok');
+  el.className = cls;
   el.textContent = msg;
-  $('toasts').appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .25s'; setTimeout(() => el.remove(), 260); }, 3400);
+  box.appendChild(el);
+  while (box.children.length > 3) box.firstChild.remove();
+  el._toastTimer = setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .25s'; setTimeout(() => el.remove(), 260); }, 3400);
 }
 
 function esc(s) {
@@ -2741,8 +2758,14 @@ function useAsFallback(btn) {
   toast('Set as Option 2 fallback link!', 'ok');
 }
 
+let saveBotInFlight = false;
 async function saveBotConfig(e) {
   e.preventDefault();
+  if (saveBotInFlight) return;
+  saveBotInFlight = true;
+  const saveBtn = $('intSaveBtn');
+  if (saveBtn) saveBtn.disabled = true;
+  try {
   const body = { chatId: $('cfgChatId').value.trim() };
   if ($('cfgBotToken').value.trim()) body.botToken = $('cfgBotToken').value.trim();
   const res = await fetch('/api/telegram/config', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
@@ -2752,6 +2775,10 @@ async function saveBotConfig(e) {
   toast('Bot & Group settings saved to your account!', 'ok');
   await refreshStatus(true);
   await testConnections();
+  } finally {
+    saveBotInFlight = false;
+    if (saveBtn) saveBtn.disabled = false;
+  }
 }
 
 async function saveMtprotoConfig(e) {
@@ -2766,7 +2793,11 @@ async function saveMtprotoConfig(e) {
   await refreshStatus(true);
 }
 
+let verifyInFlight = false;
 async function testConnections() {
+  if (verifyInFlight) return;
+  verifyInFlight = true;
+  try {
   toast('Verifying Telegram connection…', 'ok');
   const res = await fetch('/api/telegram/inspect');
   const d = await res.json();
@@ -2774,8 +2805,8 @@ async function testConnections() {
   lastWebhookUrl = (d.bot && d.bot.webhook && d.bot.webhook.url) ? d.bot.webhook.url : '';
   botVerified = Boolean(d.bot && d.bot.connected && d.bot.chat && d.bot.chat.isAdmin);
   const setCheck = (rowId, dotId, titleId, state, text) => {
-    $(rowId).className = 'int-check' + (state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : '');
-    $(dotId).className = 'live-dot' + (state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : '');
+    $(rowId).className = 'int-check' + (state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : state === 'err' ? ' err' : '');
+    $(dotId).className = 'live-dot' + (state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : state === 'err' ? ' err' : '');
     $(titleId).textContent = text;
   };
   if (d.bot && d.bot.connected) {
@@ -2785,19 +2816,20 @@ async function testConnections() {
       setCheck('diagAdminRow', 'diagAdminDot', 'diagAdminTitle', d.bot.chat.isAdmin ? 'ok' : 'warn', d.bot.chat.isAdmin ? 'Admin (' + (d.bot.chat.botStatus || 'administrator') + ')' : 'Not Admin — add the bot as Admin in the group');
       setCheck('diagInviteRow', 'diagInviteDot', 'diagInviteTitle', d.bot.chat.canInvite ? 'ok' : 'warn', d.bot.chat.canInvite ? 'Can invite users' : 'No invite rights — give the bot “Invite Users” permission');
     } else {
-      setCheck('diagChatRow', 'diagChatDot', 'diagChatTitle', 'warn', d.bot.chatError || 'Group not found — check the Group ID');
+      setCheck('diagChatRow', 'diagChatDot', 'diagChatTitle', 'err', d.bot.chatError || 'Group not found — check the Group ID');
       setCheck('diagAdminRow', 'diagAdminDot', 'diagAdminTitle', '', 'Not checked');
       setCheck('diagInviteRow', 'diagInviteDot', 'diagInviteTitle', '', 'Not checked');
     }
   } else {
-    setCheck('diagBotRow', 'diagBotDot', 'diagBotTitle', 'warn', (d.bot && d.bot.error) ? d.bot.error : 'Not connected');
+    setCheck('diagBotRow', 'diagBotDot', 'diagBotTitle', (d.bot && d.bot.error) ? 'err' : 'warn', (d.bot && d.bot.error) ? d.bot.error : 'Not connected');
     setCheck('diagChatRow', 'diagChatDot', 'diagChatTitle', '', 'Not checked');
     setCheck('diagAdminRow', 'diagAdminDot', 'diagAdminTitle', '', 'Not checked');
     setCheck('diagInviteRow', 'diagInviteDot', 'diagInviteTitle', '', 'Not checked');
   }
 
-  $('intConnPill').textContent = botVerified ? 'Connected' : 'Not connected';
-  $('intConnPill').className = 'pill ' + (botVerified ? 'pill-green' : 'pill-amber');
+  const intConnError = Boolean((d.bot && d.bot.error) || (d.bot && d.bot.connected && !d.bot.chat));
+  $('intConnPill').textContent = botVerified ? 'Connected' : intConnError ? 'Error' : 'Not connected';
+  $('intConnPill').className = 'pill ' + (botVerified ? 'pill-green' : intConnError ? 'pill-red' : 'pill-amber');
   $('intStep1State').textContent = (d.bot && d.bot.connected) ? 'Set' : 'Not set';
   $('intStep1State').className = 'int-state' + ((d.bot && d.bot.connected) ? ' ok' : '');
   $('intStep2State').textContent = (d.bot && d.bot.chat) ? d.bot.chat.title : 'Not set';
@@ -2823,6 +2855,7 @@ async function testConnections() {
     $('diagMtTitle').textContent = (d.mtproto && d.mtproto.error) ? d.mtproto.error : 'Account: Not signed in';
   }
   refreshStatus(false);
+  } finally { verifyInFlight = false; }
 }
 
 function updateIntStepper(d) {
