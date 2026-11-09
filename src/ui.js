@@ -31,6 +31,20 @@ export const UI_HTML = `<!DOCTYPE html>
     --brand-700:#0d3f61;
     --brand-50:#eef5fa;
     --brand-100:#d6e6f3;
+    --brand-strong:#0e4568;
+    --brand-soft:#e8f0f6;
+    --brand-line:#c7dbe9;
+    --surface:#ffffff;
+    --surface-2:#f8fafc;
+    --ok:#0f7a4d;
+    --ok-bg:#e6f4ec;
+    --warn:#9a6206;
+    --warn-bg:#fdf3e0;
+    --bad:#b42318;
+    --bad-bg:#fdecea;
+    --amber-dot:#d97706;
+    --radius:10px;
+    --radius-lg:14px;
     --green:#12805c;
     --green-50:#eaf7f2;
     --green-100:#c4ead9;
@@ -287,7 +301,7 @@ export const UI_HTML = `<!DOCTYPE html>
     position:sticky;top:0;z-index:20;
   }
   .top-left{display:flex;align-items:center;gap:12px;min-width:0}
-  .top-title{font-size:15.5px;font-weight:700;letter-spacing:-.015em}
+  .top-title{font-size:16.5px;font-weight:800;letter-spacing:-.015em}
   .top-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 
   .sync-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:600;color:var(--text-2)}
@@ -296,6 +310,7 @@ export const UI_HTML = `<!DOCTYPE html>
   .live-dot.pulsing{background:var(--green);animation:pulseRing 2s infinite}
   .live-dot.ok{background:var(--green)}
   .live-dot.warn{background:var(--amber)}
+  .live-dot.err{background:var(--red)}
 
   /* Buttons — Primary White + #16537e Hover */
   .btn{
@@ -352,6 +367,7 @@ export const UI_HTML = `<!DOCTYPE html>
   .pill{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap}
   .pill-green{background:var(--green-50);color:var(--green);border:1px solid var(--green-100)}
   .pill-amber{background:var(--amber-50);color:var(--amber);border:1px solid var(--amber-100)}
+  .pill-red{background:var(--red-50);color:var(--red);border:1px solid var(--red-100)}
   .card-body{padding:20px;display:grid;gap:14px}
 
   /* Visual Stepper */
@@ -484,17 +500,20 @@ export const UI_HTML = `<!DOCTYPE html>
   .guide-note b{color:var(--brand)}
   .divider{height:1px;background:var(--line)}
 
-  /* Clean Switchable Integrate Hub */
-  .int-hub{max-width:720px}
-  .int-switch{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+  /* Clean Switchable Integrate Hub — mockup-matched (Integrate Telegram only) */
+  .int-layout{display:grid;grid-template-columns:minmax(0,1fr) 318px;gap:14px;max-width:1240px;align-items:start}
+  .int-main{display:grid;gap:14px;min-width:0}
+  .int-rail{display:grid;gap:14px;align-content:start;min-width:0}
+  #intRailBot{display:grid;gap:14px;align-content:start}
+  .int-switch{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .int-tab{
     display:flex;align-items:center;gap:12px;padding:12px 14px;
-    border-radius:14px;border:1.5px solid var(--line);
+    border-radius:var(--radius-lg);border:1.5px solid var(--line);
     background:#fff;text-align:left;box-shadow:var(--shadow-sm);
     transition:all .18s var(--ease);
   }
   .int-tab:hover{border-color:var(--brand);transform:translateY(-1px)}
-  .int-tab.active{border-color:var(--brand);background:var(--brand-50);box-shadow:0 0 0 3px var(--brand-100)}
+  .int-tab.active{border-color:var(--brand);background:var(--brand-soft);box-shadow:inset 0 0 0 1px var(--brand)}
   .int-tab-ico{width:36px;height:36px;border-radius:10px;background:var(--canvas);border:1px solid var(--line);color:var(--text-2);display:grid;place-items:center;flex-shrink:0}
   .int-tab.active .int-tab-ico{background:var(--brand);border-color:var(--brand);color:#fff}
   .int-tab-title{font-size:14px;font-weight:700;color:var(--text)}
@@ -505,10 +524,69 @@ export const UI_HTML = `<!DOCTYPE html>
     padding:9px 12px;border-radius:10px;border:1px solid var(--line);
     background:var(--canvas);font-size:12.5px;font-weight:600;color:var(--text);
   }
-  .adv-details{border:1px solid var(--line);border-radius:11px;background:var(--canvas);padding:10px 14px}
+  /* Integrate setup stepper + permission checklist + listener choice */
+.stepper-4{grid-template-columns:1fr auto 1fr auto 1fr auto 1fr}
+.step-node.step-cta{background:none;border:none;padding:0;font:inherit;color:var(--text);text-align:left;cursor:pointer;border-radius:8px}
+.step-node.step-cta:hover .step-ico{background:var(--brand);color:#fff;border-color:var(--brand)}
+.step-node.current .step-ico{background:var(--brand);border-color:var(--brand);color:#fff}
+.step-node.done .step-ico{background:var(--ok-bg);border-color:var(--ok-bg);color:var(--ok)}
+#menu-integrate .card-title{font-size:14.5px}
+#menu-integrate .btn{font-size:13.5px}
+#menu-integrate .btn-sm{font-size:12px}
+#menu-integrate .btn-primary{font-weight:800}
+#menu-integrate input,#menu-integrate select,#menu-integrate textarea{border-radius:9px}
+#menu-integrate .in-wrap input:focus,#menu-integrate textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+#menu-integrate .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+#menu-integrate .pw-eye{width:auto;height:28px;padding:0 9px;font-size:12px;font-weight:700}
+#menu-integrate #cfgBotToken{padding-right:66px}
+#menu-integrate textarea{width:100%;min-height:74px;margin-top:6px;padding:10px 12px;resize:vertical;border:1px solid var(--line-strong);background:#fff;color:var(--text);outline:none;line-height:1.5;transition:border-color .15s,box-shadow .15s}
+.int-step{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+.int-step:first-child{padding-top:0;border-top:none}
+.int-step-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.int-step-head h4{font-size:13.5px;font-weight:700;letter-spacing:-.01em}
+.int-state{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--canvas);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.int-state.ok{background:var(--ok-bg);border-color:var(--ok-bg);color:var(--ok)}
+.int-state.locked{background:var(--warn-bg);border-color:var(--warn-bg);color:var(--warn)}
+.int-step.locked{opacity:.55}
+.int-hint{font-size:12px;color:var(--muted)}
+.int-checks{display:grid;gap:8px}
+.int-check-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.int-check-head b{font-size:12.5px}
+.int-check{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:var(--canvas)}
+.int-check b{display:block;font-size:13px}
+.int-check span{display:block;font-size:12px;color:var(--text-2);margin-top:1px}
+.int-check.ok{border-color:var(--green-100);background:var(--green-50)}
+.int-check.ok span{color:#0f5c43}
+.int-check.warn{border-color:var(--amber-100);background:var(--amber-50)}
+.int-check.warn span{color:var(--amber)}
+.int-check.err{border-color:var(--red-100);background:var(--red-50)}
+.int-check.err span{color:var(--red)}
+.int-check .perm-tag{display:inline-block;margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+.int-check .perm-tag.req{color:var(--warn)}
+.int-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-btn{display:grid;gap:2px;width:100%;text-align:left;padding:11px 12px;border:1.5px solid var(--line);border-radius:11px;background:#fff;font-size:13px;font-weight:700;color:var(--text);transition:all .16s var(--ease)}
+.mode-btn small{font-size:11.5px;font-weight:600;color:var(--text-2)}
+.mode-btn:hover:not(:disabled){border-color:var(--brand)}
+.mode-btn:disabled{opacity:.55;cursor:not-allowed}
+#listenerPollCard.active .mode-btn,#listenerHookCard.active .mode-btn{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 3px var(--brand-soft)}
+.callout-amber{padding:10px 12px;border-radius:10px;background:var(--warn-bg);border:1px solid var(--amber-100);font-size:12.5px;font-weight:600;color:#7a4d05}
+.callout-neutral{padding:10px 12px;border-radius:10px;background:var(--canvas);border:1px solid var(--line);font-size:12.5px;color:var(--text-2)}
+.listener-note{font-size:12px;color:var(--text-2)}
+.int-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.int-actions .note{margin-left:auto;font-size:12px;color:var(--muted)}
+.adv-details{border:1px solid var(--line);border-radius:11px;background:var(--canvas);padding:10px 14px}
   .adv-details summary{cursor:pointer;font-size:12.5px;font-weight:600;color:var(--brand);list-style:none;display:flex;align-items:center;gap:7px}
   .adv-details summary::-webkit-details-marker{display:none}
   .adv-details[open] summary{margin-bottom:12px}
+.flow-list{list-style:none;display:grid}
+.flow-list li{display:flex;align-items:center;gap:11px;padding:9px 2px}
+.flow-list li + li{border-top:1px solid var(--line)}
+.flow-num{width:24px;height:24px;border-radius:50%;background:var(--brand-soft);color:var(--brand);font-size:12px;font-weight:800;display:grid;place-items:center;flex-shrink:0}
+.flow-list b{font-size:13px;font-weight:600}
+.vs-row{display:grid;gap:3px;padding:10px 2px}
+.vs-row + .vs-row{border-top:1px solid var(--line)}
+.vs-row b{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--brand)}
+.vs-row span{font-size:13px;color:var(--text-2)}
 
   /* Saved Group Profile Bar */
   .group-bar{
@@ -538,6 +616,15 @@ export const UI_HTML = `<!DOCTYPE html>
     gap:8px;align-items:center;flex-wrap:wrap;
   }
   .group-add-drawer.open{display:flex;animation:fadeSlide .18s var(--ease)}
+  /* Group bar moved into the left menu: vertical card, full-width controls */
+  .side-group{padding:0 12px 12px}
+  .sidebar .group-bar{flex-direction:column;align-items:stretch;margin:0;padding:12px;gap:10px;box-shadow:none}
+  .sidebar .group-profile{min-width:0;flex:none}
+  .sidebar .group-name{max-width:170px}
+  .sidebar .group-controls{flex-direction:column;align-items:stretch}
+  .sidebar .group-select{min-width:0;max-width:none;width:100%}
+  .sidebar .group-add-drawer{padding-top:10px}
+  body.side-collapsed .side-group{display:none}
 
   /* VIP Expiry Controls */
   .vip-box{
@@ -609,15 +696,17 @@ export const UI_HTML = `<!DOCTYPE html>
   .legal-body{padding:20px;display:grid;gap:12px;font-size:13px;color:var(--text-2);line-height:1.6;max-height:65vh;overflow-y:auto}
   .legal-body p b{color:var(--text)}
   .legal-foot{padding:13px 20px;border-top:1px solid var(--line);background:var(--canvas);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
+  .help-steps{margin:0;padding-left:20px;display:grid;gap:10px;font-size:13px;color:var(--text-2);line-height:1.55}
+  .help-steps li b{color:var(--text)}
 
   .toasts{position:fixed;bottom:56px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:70;max-width:360px}
   .toast{padding:11px 15px;border-radius:10px;background:#0f172a;color:#fff;font-size:13px;font-weight:500;box-shadow:0 10px 28px rgba(15,23,42,.22);animation:toastPop .2s var(--ease)}
-  .toast.ok{background:var(--brand)}
+  .toast.ok{background:var(--green)}
   .toast.err{background:var(--red)}
 
   @media(max-width:1060px){.kpi-strip{grid-template-columns:repeat(2,1fr)}.focus-grid,.grid-2{grid-template-columns:1fr}}
   @media(max-width:680px){
-    .kpi-strip,.two,.mode-grid,.meters,.int-switch{grid-template-columns:1fr}
+    .kpi-strip,.two,.mode-grid,.meters,.int-switch,.listener-grid{grid-template-columns:1fr}
     .stepper{grid-template-columns:1fr;gap:6px}
     .step-sep{display:none}
     .workspace{padding:16px 14px 92px}
@@ -635,8 +724,19 @@ export const UI_HTML = `<!DOCTYPE html>
     .sidebar .user-meta{display:none}
     .sidebar .logout-btn{position:relative;width:46px;height:40px;padding:0}
     .sidebar .logout-btn span.lbl{display:none}
+    .sidebar .side-group{display:none}
     .site-footer{padding:8px 14px;flex-wrap:wrap;justify-content:center;gap:4px 12px}
     .toasts{bottom:74px}
+  }
+  @media(max-width:1020px){
+    #menu-integrate .int-layout{grid-template-columns:1fr}
+    #menu-integrate .stepper-4{grid-template-columns:1fr 1fr;gap:10px}
+    #menu-integrate .step-sep{display:none}
+  }
+  @media(max-width:760px){
+    #menu-integrate .int-switch,#menu-integrate .int-modes{grid-template-columns:1fr}
+    #menu-integrate .int-actions{flex-direction:column;align-items:stretch}
+    #menu-integrate .int-actions .note{margin-left:0}
   }
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.01ms !important;transition-duration:.01ms !important}
@@ -758,44 +858,8 @@ export const UI_HTML = `<!DOCTYPE html>
       </button>
     </nav>
 
-    <div class="side-foot">
-      <div class="user-box" id="userBox">
-        <div class="user-av" id="userAvatar">U</div>
-        <div class="user-meta">
-          <div class="user-name" id="userNameLabel">Account</div>
-          <div class="user-email" id="userEmailLabel">Saved workspace</div>
-        </div>
-      </div>
-      <button class="btn btn-sm btn-full logout-btn" id="logoutBtn" type="button" data-tip="Sign Out" onclick="logout()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        <span class="lbl">Sign Out</span>
-      </button>
-    </div>
-  </aside>
-
-  <!-- RIGHT MAIN CONTENT -->
-  <div class="main-col">
-    <header class="topbar">
-      <div class="top-left">
-        <div class="top-title" id="topMenuTitle">Option 1 · Safe Invite Link</div>
-      </div>
-      <div class="top-actions">
-        <div class="sync-pill" id="syncPill">
-          <span class="live-dot" id="syncDot"></span>
-          <span id="syncLabel">Listener Off</span>
-        </div>
-        <button class="btn btn-sm" id="syncBtn" type="button" onclick="syncNow()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-          Sync Events
-        </button>
-        <button class="btn btn-sm btn-primary" type="button" onclick="openMenu('integrate')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Telegram Setup
-        </button>
-      </div>
-    </header>
-
-    <main class="workspace">
+    <div class="side-group" id="sideGroupWrap">
+      <div class="nav-group-label">Group</div>
       <!-- ============ SAVED GROUPS / CHANNELS PROFILE DROPDOWN ============ -->
       <div class="group-bar" id="groupProfileBar">
         <div class="group-profile">
@@ -832,6 +896,45 @@ export const UI_HTML = `<!DOCTYPE html>
         </div>
       </div>
 
+    </div>
+    <div class="side-foot">
+      <div class="user-box" id="userBox">
+        <div class="user-av" id="userAvatar">U</div>
+        <div class="user-meta">
+          <div class="user-name" id="userNameLabel">Account</div>
+          <div class="user-email" id="userEmailLabel">Saved workspace</div>
+        </div>
+      </div>
+      <button class="btn btn-sm btn-full logout-btn" id="logoutBtn" type="button" data-tip="Sign Out" onclick="logout()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span class="lbl">Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- RIGHT MAIN CONTENT -->
+  <div class="main-col">
+    <header class="topbar">
+      <div class="top-left">
+        <h2 class="top-title" id="topMenuTitle">Option 1 · Safe Invite Link</h2>
+      </div>
+      <div class="top-actions">
+        <div class="sync-pill" id="syncPill">
+          <span class="live-dot" id="syncDot"></span>
+          <span id="syncLabel">Listener Off</span>
+        </div>
+        <button class="btn btn-sm" id="syncBtn" type="button" onclick="syncNow()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          Sync Events
+        </button>
+        <button class="btn btn-sm btn-primary" id="setupBtn" type="button" onclick="openMenu('integrate')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Telegram Setup
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
       <!-- ============ PAGE 1: OPTION 1 ONLY ============ -->
       <section id="menu-option1" class="panel-anim">
         <div class="focus-grid">
@@ -1313,191 +1416,267 @@ export const UI_HTML = `<!DOCTYPE html>
 
       <!-- ============ PAGE 4: INTEGRATE TELEGRAM (CLEAN SWITCHER — 1 AT A TIME) ============ -->
       <section id="menu-integrate" style="display:none">
-        <div class="int-hub">
-          <!-- Choose WHICH Integration you want -->
-          <div class="int-switch" role="tablist" aria-label="Choose Telegram Integration">
-            <button type="button" class="int-tab active" id="intTabBot" onclick="openIntegrateTab('bot')">
-              <span class="int-tab-ico">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="16" y1="16" x2="16.01" y2="16"/></svg>
-              </span>
-              <span class="int-tab-title">Option 1 · Bot Setup</span>
-              <span class="int-tab-tag pill-green">Recommended</span>
-            </button>
-
-            <button type="button" class="int-tab" id="intTabMt" onclick="openIntegrateTab('mtproto')">
-              <span class="int-tab-ico">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
-              </span>
-              <span class="int-tab-title">Option 2 · Phone Account</span>
-              <span class="int-tab-tag pill-amber">Optional</span>
-            </button>
-          </div>
-
-          <!-- PANEL A: BOT SETUP (DEFAULT — NEEDED FOR OPTION 1 + LEAVE TRACKING) -->
-          <article class="card" id="intPanelBot">
-            <div class="card-head">
-              <div class="card-ico brand">
-                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="16" y1="16" x2="16.01" y2="16"/></svg>
+        <div class="int-layout">
+          <div class="int-main">
+            <div class="stepper stepper-4" aria-label="Setup steps">
+              <div class="step-node current" id="intStep1">
+                <span class="step-ico">1</span>
+                <span><b>Bot token</b></span>
               </div>
-              <div class="card-title">Bot &amp; Group Connection</div>
-              <button class="btn btn-sm btn-primary" type="button" onclick="testConnections()" style="margin-left:auto">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                Check Status
+              <svg class="step-sep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              <div class="step-node" id="intStep2">
+                <span class="step-ico">2</span>
+                <span><b>Group / Channel</b></span>
+              </div>
+              <svg class="step-sep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              <div class="step-node" id="intStep3">
+                <span class="step-ico">3</span>
+                <span><b>Admin rights</b></span>
+              </div>
+              <svg class="step-sep" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              <button type="button" class="step-node step-cta" id="intStep4" onclick="openMenu('option1')">
+                <span class="step-ico">4</span>
+                <span><b>Event tracking</b></span>
               </button>
             </div>
-            <form class="card-body" onsubmit="saveBotConfig(event)">
-              <div class="guide-note">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                <span>Start here: get a token from <b>@BotFather</b>, paste below, and add your Bot as <b>Admin</b> in your Group/Channel.</span>
-              </div>
+            <!-- Choose WHICH Integration you want -->
+            <div class="int-switch" role="tablist" aria-label="Choose Telegram Integration">
+              <button type="button" class="int-tab active" id="intTabBot" onclick="openIntegrateTab('bot')">
+                <span class="int-tab-ico">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="16" y1="16" x2="16.01" y2="16"/></svg>
+                </span>
+                <span class="int-tab-title">Option 1 · Bot Setup</span>
+                <span class="int-tab-tag pill-green">Recommended</span>
+              </button>
 
-              <div class="status-strip">
-                <div class="status-chip"><span class="live-dot" id="diagBotDot"></span><span id="diagBotTitle">Bot: Not checked</span></div>
-                <div class="status-chip"><span class="live-dot" id="diagChatDot"></span><span id="diagChatTitle">Group: Not checked</span></div>
-              </div>
+              <button type="button" class="int-tab" id="intTabMt" onclick="openIntegrateTab('mtproto')">
+                <span class="int-tab-ico">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+                </span>
+                <span class="int-tab-title">Option 2 · Phone Account</span>
+                <span class="int-tab-tag pill-amber">Optional</span>
+              </button>
+            </div>
 
-              <label class="field">Bot Token <span class="hint" id="botTokenHint"></span>
-                <div class="in-wrap">
-                  <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-                  <input id="cfgBotToken" type="password" placeholder="Paste Bot Token from @BotFather" />
+            <!-- PANEL A: BOT SETUP (DEFAULT — NEEDED FOR OPTION 1 + LEAVE TRACKING) -->
+            <article class="card" id="intPanelBot">
+              <div class="card-head">
+                <div class="card-ico brand">
+                  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="16" y1="16" x2="16.01" y2="16"/></svg>
                 </div>
-              </label>
-
-              <label class="field">Group or Channel ID
-                <div class="in-wrap">
-                  <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                  <input id="cfgChatId" placeholder="-1001234567890 or @your_channel" />
-                </div>
-              </label>
-
-              <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <button class="btn btn-primary" style="flex:1;min-width:190px" type="submit">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
-                  Save &amp; Verify Bot
-                </button>
-                <button class="btn" type="button" id="togglePollBtn" onclick="togglePolling()">Enable Local Listener</button>
+                <h3 class="card-title">Bot &amp; Group Connection</h3>
+                <span class="pill pill-amber" id="intConnPill">Not connected</span>
+                <button class="btn btn-sm" type="button" id="intHelpBtn" onclick="openIntHelp()" style="margin-left:auto" aria-label="Help: how to set up your bot and group">? Help</button>
               </div>
+              <form class="card-body" onsubmit="saveBotConfig(event)">
 
-              <details class="adv-details">
-                <summary>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                  Advanced: Welcome Message &amp; Webhook URL
-                </summary>
-                <div style="display:grid;gap:12px">
-                  <label class="field">Welcome DM <span class="hint">({name} = first name)</span>
+                <section class="int-step" aria-label="Step 1 Bot token">
+                  <div class="int-step-head"><h4>Bot token</h4><span class="int-state" id="intStep1State">Not set</span></div>
+                  <label class="field">Bot Token <span class="hint" id="botTokenHint"></span>
                     <div class="in-wrap">
-                      <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-                      <input id="cfgWelcome" placeholder="Welcome {name}! Your request to join has been approved." />
+                      <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                      <input id="cfgBotToken" class="mono" type="password" placeholder="123456789:AAExxxxxxxxxxxxxxxxxxxxx" autocomplete="off" />
+                      <button type="button" class="pw-eye" id="cfgTokenToggle" onclick="toggleBotToken()" aria-label="Show bot token">Show</button>
                     </div>
                   </label>
-                  <div style="display:flex;gap:8px;align-items:flex-end">
-                    <label class="field" style="flex:1">HTTPS Webhook URL
-                      <div class="in-wrap">
-                        <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-                        <input id="cfgWebhookUrl" placeholder="https://your-domain.com/api/option1/webhook" />
-                      </div>
-                    </label>
-                    <button class="btn btn-sm" type="button" style="height:44px;padding:0 14px" onclick="setWebhook()">Set Webhook</button>
+                </section>
+
+                <section class="int-step" aria-label="Step 2 Group or Channel">
+                  <div class="int-step-head"><h4>Group or Channel</h4><span class="int-state" id="intStep2State">Not set</span></div>
+                  <label class="field">Group / Channel ID
+                    <div class="in-wrap">
+                      <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      <input id="cfgChatId" class="mono" placeholder="-1001234567890 or @channel" />
+                    </div>
+                  </label>
+                  <p class="int-hint">Saving sets this as the active group.</p>
+                </section>
+
+                <section class="int-step" aria-label="Step 3 Admin rights in the group">
+                  <div class="int-step-head"><h4>Admin rights in the group</h4><span class="int-state" id="intStep3State">Not checked</span></div>
+                  <div class="int-checks">
+                    <div class="int-check" id="diagInviteRow"><span class="live-dot" id="diagInviteDot"></span><div><b>Invite users via link</b><span id="diagInviteTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
+                    <!-- Ban / restrict + Delete are never auto-checked: /api/telegram/inspect returns no can_restrict_members / can_delete_messages field. -->
+                    <div class="int-check" id="diagBanRow"><span class="live-dot" id="diagBanDot"></span><div><b>Ban / restrict members</b><span id="diagBanTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
+                    <div class="int-check" id="diagDeleteRow"><span class="live-dot" id="diagDeleteDot"></span><div><b>Delete messages</b><span id="diagDeleteTitle">–</span></div><span class="perm-tag">OPTIONAL</span></div>
+                    <!-- Kept from PR #2: extra honest row; inspect has no removal-rights field, so it stays Not checked. -->
+                    <div class="int-check" id="diagRemoveRow"><span class="live-dot" id="diagRemoveDot"></span><div><b>Can remove expired members</b><span id="diagRemoveTitle">Not checked</span></div><span class="perm-tag req">REQUIRED</span></div>
                   </div>
+                </section>
+
+                <section class="int-step locked" id="intStep4Block" aria-label="Step 4 Event tracking">
+                  <div class="int-step-head"><h4>Event tracking</h4><span class="int-state locked" id="intStep4State">Locked until verified</span></div>
+                  <div class="int-modes">
+                    <div id="listenerPollCard">
+                      <button class="mode-btn" type="button" id="togglePollBtn" onclick="togglePolling()" disabled><b>Local Listener (polling)</b><small>For localhost</small></button>
+                    </div>
+                    <div id="listenerHookCard">
+                      <button class="mode-btn" type="button" id="setWebhookBtn" onclick="setWebhook()" disabled><b>Webhook</b><small>For a deployed server</small></button>
+                      <div id="webhookUrlWrap" hidden style="margin-top:10px">
+                        <label class="field">Webhook URL
+                          <div class="in-wrap">
+                            <svg class="in-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                            <input id="cfgWebhookUrl" class="mono" aria-label="HTTPS Webhook URL" placeholder="https://your-domain.com/telegram/webhook" />
+                          </div>
+                        </label>
+                        <button class="btn btn-sm" type="button" style="margin-top:8px" onclick="setWebhook()">Set Webhook</button>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="callout-amber">Only one can run at a time.</p>
+                  <p class="listener-note" id="listenerModeNote">No listener active yet — enable Local Listener or set a Webhook to receive join requests.</p>
+                </section>
+
+                <div class="int-actions">
+                  <button class="btn btn-primary" type="submit" id="intSaveBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                    Save &amp; Verify Bot
+                  </button>
+                  <button class="btn" type="button" id="intTestBtn" onclick="sendTestInvite()" disabled>Send Test Invite Link</button>
+                  <button class="btn" type="button" id="intEnableBtn" onclick="togglePolling()" disabled>Enable Listener</button>
+                  <span class="note">Unlocks after verification.</span>
                 </div>
-              </details>
-            </form>
-          </article>
+                <div class="result-box" id="intTestOut"></div>
 
-          <!-- PANEL B: PHONE ACCOUNT POOL / MTPROTO (OPTIONAL — OPTION 2 ONLY) -->
-          <article class="card" id="intPanelMt" style="display:none">
-            <div class="card-head">
-              <div class="card-ico amber">
-                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+              </form>
+            </article>
+
+            <!-- PANEL B: PHONE ACCOUNT / MTPROTO (OPTIONAL — OPTION 2 ONLY) -->
+            <article class="card" id="intPanelMt" style="display:none">
+              <div class="card-head">
+                <div class="card-ico amber">
+                  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+                </div>
+                <h3 class="card-title">Phone Account (MTProto)</h3>
+                <button class="btn btn-sm" type="button" onclick="testConnections()" style="margin-left:auto">Check Status</button>
               </div>
-              <div class="card-title">Helper Account Pool (Option 2 Only)</div>
-              <button class="btn btn-sm" type="button" onclick="testConnections()" style="margin-left:auto">Check Status</button>
-            </div>
-            <div class="card-body">
-              <div class="guide-note">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                <span>Link 1–3 helper accounts for automatic rotation. Create API ID &amp; Hash at <a href="https://my.telegram.org" target="_blank" rel="noopener noreferrer" style="color:var(--brand);font-weight:700;text-decoration:underline">my.telegram.org</a>, then sign in below.</span>
-              </div>
+              <div class="card-body">
 
-              <div class="status-strip">
-                <div class="status-chip"><span class="live-dot" id="diagMtDot"></span><span id="diagMtTitle">Account: Not signed in</span></div>
-              </div>
+                <div class="status-strip">
+                  <div class="status-chip"><span class="live-dot" id="diagMtDot"></span><span id="diagMtTitle">Account: Not signed in</span></div>
+                </div>
 
-              <div class="pool-list" id="mtPoolList"></div>
+                <div class="pool-list" id="mtPoolList"></div>
 
-              <div class="two">
-                <label class="field">API ID
-                  <div class="in-wrap">
-                    <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10"/><path d="M7 12h6"/></svg>
-                    <input id="cfgApiId" placeholder="From my.telegram.org" />
-                  </div>
-                </label>
-                <label class="field">API Hash <span class="hint" id="apiHashHint"></span>
-                  <div class="in-wrap">
-                    <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                    <input id="cfgApiHash" type="password" placeholder="32-character hash" />
-                  </div>
-                </label>
-              </div>
-
-              <div class="two">
-                <label class="field">Helper Account Label
-                  <div class="in-wrap">
-                    <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    <input id="mtLabel" placeholder="e.g. Helper 1 or Sales SIM" />
-                  </div>
-                </label>
-                <label class="field">Telegram Phone (+code)
-                  <div class="in-wrap">
-                    <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                    <input id="mtPhone" placeholder="+85512345678" />
-                  </div>
-                </label>
-              </div>
-              <button class="btn btn-primary btn-full" type="button" onclick="mtSendCode()">Send Login Code &amp; Add to Pool</button>
-
-              <div id="mtOtpArea" style="display:none;gap:12px" class="two">
-                <label class="field">Verification Code
-                  <div class="in-wrap">
-                    <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778"/></svg>
-                    <input id="mtCode" placeholder="12345" />
-                  </div>
-                </label>
-                <label class="field">2FA Password <span class="hint">(if enabled)</span>
-                  <div class="in-wrap">
-                    <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/></svg>
-                    <input id="mtPass" type="password" placeholder="Optional" />
-                  </div>
-                </label>
-                <button class="btn btn-primary btn-full" style="grid-column:1 / -1" type="button" onclick="mtCompleteLogin()">Verify &amp; Save Session</button>
-              </div>
-              <div id="mtLoginOut" class="result-box"></div>
-
-              <details class="adv-details">
-                <summary>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  Advanced: Safety Caps (Default: 4 / hr, 15 / day)
-                </summary>
-                <form style="display:grid;gap:12px" onsubmit="saveMtprotoConfig(event)">
+                <section class="int-step" aria-label="Step 1 Telegram app credentials">
+                  <div class="int-step-head"><h4>Telegram app credentials</h4><span class="int-state">Step 1</span></div>
                   <div class="two">
-                    <label class="field">Safe Limit / Hour
+                    <label class="field">API ID
                       <div class="in-wrap">
-                        <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        <input id="cfgMaxHour" type="number" min="1" max="20" value="4" />
+                        <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10"/><path d="M7 12h6"/></svg>
+                        <input id="cfgApiId" class="mono" placeholder="12345678" />
                       </div>
                     </label>
-                    <label class="field">Safe Limit / Day
+                    <label class="field">API Hash <span class="hint" id="apiHashHint"></span>
                       <div class="in-wrap">
-                        <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <input id="cfgMaxDay" type="number" min="1" max="40" value="15" />
+                        <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <input id="cfgApiHash" class="mono" type="password" placeholder="abcdef0123456789…" />
                       </div>
                     </label>
                   </div>
-                  <button class="btn btn-sm" type="submit">Save Safety Caps</button>
-                </form>
-              </details>
+                </section>
+
+                <section class="int-step" aria-label="Step 2 Sign in with your number">
+                  <div class="int-step-head"><h4>Sign in with your number</h4><span class="int-state">Step 2</span></div>
+                  <div class="two">
+                    <label class="field">Helper Account Label
+                      <div class="in-wrap">
+                        <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <input id="mtLabel" placeholder="e.g. Helper 1 or Sales SIM" />
+                      </div>
+                    </label>
+                    <label class="field">Telegram Phone (+code)
+                      <div class="in-wrap">
+                        <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <input id="mtPhone" class="mono" placeholder="+855 12 345 678" />
+                      </div>
+                    </label>
+                  </div>
+                  <p class="callout-neutral">For direct invites only — the bot still handles links &amp; tracking.</p>
+                  <button class="btn btn-primary btn-full" type="button" onclick="mtSendCode()">Send Login Code</button>
+                </section>
+
+                <div id="mtOtpArea" style="display:none;gap:12px" class="two">
+                  <label class="field">Verification Code
+                    <div class="in-wrap">
+                      <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778"/></svg>
+                      <input id="mtCode" placeholder="12345" />
+                    </div>
+                  </label>
+                  <label class="field">2FA Password
+                    <div class="in-wrap">
+                      <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/></svg>
+                      <input id="mtPass" type="password" placeholder="Optional" />
+                    </div>
+                  </label>
+                  <button class="btn btn-primary btn-full" style="grid-column:1 / -1" type="button" onclick="mtCompleteLogin()">Verify &amp; Save Session</button>
+                </div>
+                <div id="mtLoginOut" class="result-box"></div>
+
+                <details class="adv-details">
+                  <summary>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Advanced: Safety Caps
+                  </summary>
+                  <form style="display:grid;gap:12px" onsubmit="saveMtprotoConfig(event)">
+                    <div class="two">
+                      <label class="field">Safe Limit / Hour
+                        <div class="in-wrap">
+                          <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                          <input id="cfgMaxHour" type="number" min="1" max="20" value="4" />
+                        </div>
+                      </label>
+                      <label class="field">Safe Limit / Day
+                        <div class="in-wrap">
+                          <svg class="in-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                          <input id="cfgMaxDay" type="number" min="1" max="40" value="15" />
+                        </div>
+                      </label>
+                    </div>
+                    <button class="btn btn-sm" type="submit">Save Safety Caps</button>
+                  </form>
+                </details>
+              </div>
+            </article>
+          </div>
+          <aside class="int-rail">
+            <div id="intRailBot">
+              <div class="card">
+                <div class="card-head">
+                  <h3 class="card-title">Connection health</h3>
+                  <button class="btn btn-sm" type="button" onclick="testConnections()" style="margin-left:auto">Re-check</button>
+                </div>
+                <div class="card-body" style="gap:8px">
+                  <div class="int-check" id="diagBotRow"><span class="live-dot" id="diagBotDot"></span><div><b>Bot identity</b><span id="diagBotTitle">NOT CHECKED</span></div></div>
+                  <div class="int-check" id="diagChatRow"><span class="live-dot" id="diagChatDot"></span><div><b>Group reachable</b><span id="diagChatTitle">NOT CHECKED</span></div></div>
+                  <div class="int-check" id="diagAdminRow"><span class="live-dot" id="diagAdminDot"></span><div><b>Bot is admin</b><span id="diagAdminTitle">NOT CHECKED</span></div></div>
+                  <div class="int-check" id="healthEventsRow"><span class="live-dot" id="healthEventsDot"></span><div><b>Events flowing</b><span id="healthEventsTitle">—</span></div></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-head">
+                  <h3 class="card-title">How the flow works</h3>
+                </div>
+                <div class="card-body" style="gap:0">
+                  <ol class="flow-list">
+                    <li><span class="flow-num">1</span><b>You create a safe link</b></li>
+                    <li><span class="flow-num">2</span><b>Customer taps the link</b></li>
+                    <li><span class="flow-num">3</span><b>Bot approves &amp; logs it</b></li>
+                    <li><span class="flow-num">4</span><b>Leave or expiry</b></li>
+                  </ol>
+                </div>
+              </div>
             </div>
-          </article>
+            <div class="card" id="intRailMt" style="display:none">
+              <div class="card-head">
+                <h3 class="card-title">Bot vs Phone — which does what</h3>
+              </div>
+              <div class="card-body" style="gap:0">
+                <div class="vs-row"><b>BOT</b><span>Safe links, approvals, tracking, VIP removal</span></div>
+                <div class="vs-row"><b>PHONE</b><span>Direct invites only (Option 2 &amp; bulk)</span></div>
+              </div>
+            </div>
+          </aside>
         </div>
       </section>
     </main>
@@ -1536,6 +1715,31 @@ export const UI_HTML = `<!DOCTYPE html>
   </div>
 </div>
 
+<!-- ============ INTEGRATE HELP MODAL ============ -->
+<div class="legal-overlay" id="intHelpModal" onclick="if(event.target===this)closeIntHelp()">
+  <div class="legal-card" role="dialog" aria-modal="true" aria-labelledby="intHelpTitle">
+    <div class="legal-head">
+      <h2 id="intHelpTitle">Bot &amp; Group Setup</h2>
+      <button type="button" class="legal-close" onclick="closeIntHelp()" aria-label="Close help">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="legal-body">
+      <ol class="help-steps">
+        <li><b>Make a bot</b> — @BotFather &rarr; /newbot &rarr; copy the Bot Token</li>
+        <li><b>Make a group</b> — New Group, add the bot + 1 friend, make the bot Admin (Invite Users on)</li>
+        <li><b>Get the Group ID</b> — add @userinfobot to the group, send hi, copy the -100... number</li>
+        <li><b>Verify</b> — paste Bot Token + Group ID here &rarr; Save &amp; Verify Bot &rarr; checks turn green</li>
+        <li><b>Test</b> — Send Test Invite Link &rarr; open it with a second account &rarr; join request auto-approves</li>
+      </ol>
+    </div>
+    <div class="legal-foot">
+      <span>Bot Token is secret — never share it.</span>
+      <button type="button" class="btn btn-sm btn-primary" onclick="closeIntHelp()">Close</button>
+    </div>
+  </div>
+</div>
+
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <script>
@@ -1546,6 +1750,8 @@ let activeMenu = 'option1';
 let statusFilter = 'all';
 let appData = null;
 let activeLoginId = null;
+let lastWebhookUrl = '';
+let botVerified = false;
 
 const MENU_META = {
   option1: 'Option 1 · Safe Invite Link',
@@ -1561,14 +1767,29 @@ function openIntegrateTab(tab) {
   $('intTabMt').classList.toggle('active', !isBot);
   $('intPanelBot').style.display = isBot ? 'block' : 'none';
   $('intPanelMt').style.display = isBot ? 'none' : 'block';
+  $('intRailBot').style.display = isBot ? 'grid' : 'none';
+  $('intRailMt').style.display = isBot ? 'none' : 'block';
 }
 
 function toast(msg, kind) {
+  const cls = 'toast ' + (kind || 'ok');
+  // Never show the same alert twice: if an identical toast is already
+  // visible, just restart its timer instead of stacking a duplicate.
+  const box = $('toasts');
+  for (const old of box.querySelectorAll('.toast')) {
+    if (old.textContent === msg && old.className === cls) {
+      clearTimeout(old._toastTimer);
+      old.style.opacity = '1'; old.style.transition = '';
+      old._toastTimer = setTimeout(() => { old.style.opacity = '0'; old.style.transition = 'opacity .25s'; setTimeout(() => old.remove(), 260); }, 3400);
+      return;
+    }
+  }
   const el = document.createElement('div');
-  el.className = 'toast ' + (kind || 'ok');
+  el.className = cls;
   el.textContent = msg;
-  $('toasts').appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .25s'; setTimeout(() => el.remove(), 260); }, 3400);
+  box.appendChild(el);
+  while (box.children.length > 3) box.firstChild.remove();
+  el._toastTimer = setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .25s'; setTimeout(() => el.remove(), 260); }, 3400);
 }
 
 function esc(s) {
@@ -1700,6 +1921,11 @@ function openMenu(name) {
     btn.classList.toggle('active', btn.dataset.menu === name);
   });
   $('topMenuTitle').textContent = MENU_META[name] || MENU_META.option1;
+  // The two topbar buttons live in the shared topbar: hide them on this
+  // page only (the setup button just re-opens this page); other views keep them.
+  const onIntegrate = name === 'integrate';
+  if ($('syncBtn')) $('syncBtn').style.display = onIntegrate ? 'none' : '';
+  if ($('setupBtn')) $('setupBtn').style.display = onIntegrate ? 'none' : '';
 }
 
 function openStatusFilter(filter) {
@@ -1717,7 +1943,10 @@ function setStatusFilter(filter) {
 }
 
 function getRows() {
-  return (appData && appData.history) || [];
+  // Bot link failures are not shown in status: a failed link creation (e.g. chat
+  // not found) is reported where it happens — the Test Invite / Option 1 result
+  // box and the error toast — and must not appear as a status row or count.
+  return ((appData && appData.history) || []).filter(r => r.status !== 'BOT_LINK_FAILED');
 }
 
 function getVipRows() {
@@ -1872,6 +2101,23 @@ function renderAll() {
       $('syncLabel').textContent = 'Listener Off';
       $('togglePollBtn').textContent = 'Enable Local Listener';
     }
+    $('listenerPollCard').classList.toggle('active', Boolean(appData.pollingEnabled));
+    $('listenerHookCard').classList.toggle('active', !appData.pollingEnabled && Boolean(lastWebhookUrl));
+    $('togglePollBtn').disabled = !botVerified && !appData.pollingEnabled;
+    $('setWebhookBtn').disabled = !botVerified;
+    $('intTestBtn').disabled = !botVerified;
+    $('intEnableBtn').disabled = !botVerified && !appData.pollingEnabled;
+    $('intEnableBtn').textContent = appData.pollingEnabled ? 'Pause Listener' : 'Enable Listener';
+    $('syncBtn').disabled = !botVerified;
+    $('healthEventsTitle').textContent = appData.pollingEnabled ? 'Live' : (lastWebhookUrl ? 'Webhook' : '—');
+    $('healthEventsDot').className = 'live-dot' + ((appData.pollingEnabled || lastWebhookUrl) ? ' ok' : '');
+    $('listenerModeNote').textContent = appData.pollingEnabled
+      ? 'Active: Local Listener — join requests arrive while this server runs.'
+      : !botVerified
+        ? 'Verify your bot first — Save & Verify Bot (or Re-check) unlocks the listener.'
+        : lastWebhookUrl
+          ? 'Active: Webhook — join requests go to your public URL.'
+          : 'No listener active yet — enable Local Listener or set a Webhook to receive join requests.';
   }
 
   renderGroupProfileBar();
@@ -2013,7 +2259,6 @@ function hydrateConfigForm() {
   if (!appData || !appData.config) return;
   const c = appData.config;
   $('cfgChatId').value = c.chatId || '';
-  $('cfgWelcome').value = c.welcomeText || '';
   $('botTokenHint').textContent = c.botTokenSet ? '(Saved: ' + c.botTokenPreview + ')' : '(Not set)';
   $('cfgApiId').value = c.apiId || '';
   $('apiHashHint').textContent = c.apiHashSet ? '(Saved: ' + c.apiHashPreview + ')' : '(Not set)';
@@ -2562,9 +2807,15 @@ function useAsFallback(btn) {
   toast('Set as Option 2 fallback link!', 'ok');
 }
 
+let saveBotInFlight = false;
 async function saveBotConfig(e) {
   e.preventDefault();
-  const body = { chatId: $('cfgChatId').value.trim(), welcomeText: $('cfgWelcome').value.trim() };
+  if (saveBotInFlight) return;
+  saveBotInFlight = true;
+  const saveBtn = $('intSaveBtn');
+  if (saveBtn) saveBtn.disabled = true;
+  try {
+  const body = { chatId: $('cfgChatId').value.trim() };
   if ($('cfgBotToken').value.trim()) body.botToken = $('cfgBotToken').value.trim();
   const res = await fetch('/api/telegram/config', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
   const data = await res.json();
@@ -2573,6 +2824,10 @@ async function saveBotConfig(e) {
   toast('Bot & Group settings saved to your account!', 'ok');
   await refreshStatus(true);
   await testConnections();
+  } finally {
+    saveBotInFlight = false;
+    if (saveBtn) saveBtn.disabled = false;
+  }
 }
 
 async function saveMtprotoConfig(e) {
@@ -2587,27 +2842,53 @@ async function saveMtprotoConfig(e) {
   await refreshStatus(true);
 }
 
+let verifyInFlight = false;
 async function testConnections() {
+  if (verifyInFlight) return;
+  verifyInFlight = true;
+  try {
   toast('Verifying Telegram connection…', 'ok');
   const res = await fetch('/api/telegram/inspect');
   const d = await res.json();
 
+  lastWebhookUrl = (d.bot && d.bot.webhook && d.bot.webhook.url) ? d.bot.webhook.url : '';
+  botVerified = Boolean(d.bot && d.bot.connected && d.bot.chat && d.bot.chat.isAdmin);
+  const setCheck = (rowId, dotId, titleId, state, text) => {
+    $(rowId).className = 'int-check' + (state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : state === 'err' ? ' err' : '');
+    $(dotId).className = 'live-dot' + (state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : state === 'err' ? ' err' : '');
+    $(titleId).textContent = text;
+  };
   if (d.bot && d.bot.connected) {
-    $('diagBotDot').className = 'live-dot ok';
-    $('diagBotTitle').textContent = 'Bot: @' + d.bot.bot.username;
+    setCheck('diagBotRow', 'diagBotDot', 'diagBotTitle', 'ok', '@' + d.bot.bot.username);
     if (d.bot.chat) {
-      $('diagChatDot').className = d.bot.chat.canInvite ? 'live-dot ok' : 'live-dot warn';
-      $('diagChatTitle').textContent = d.bot.chat.canInvite
-        ? 'Group: ' + d.bot.chat.title + ' (Admin Ready)'
-        : 'Group: Need Bot Admin Invite Rights';
+      setCheck('diagChatRow', 'diagChatDot', 'diagChatTitle', 'ok', d.bot.chat.title + (d.bot.chat.type ? ' · ' + d.bot.chat.type : ''));
+      setCheck('diagAdminRow', 'diagAdminDot', 'diagAdminTitle', d.bot.chat.isAdmin ? 'ok' : 'warn', d.bot.chat.isAdmin ? 'Admin (' + (d.bot.chat.botStatus || 'administrator') + ')' : 'Not Admin — add the bot as Admin in the group');
+      setCheck('diagInviteRow', 'diagInviteDot', 'diagInviteTitle', d.bot.chat.canInvite ? 'ok' : 'warn', d.bot.chat.canInvite ? 'Can invite users' : 'No invite rights — give the bot “Invite Users” permission');
     } else {
-      $('diagChatDot').className = 'live-dot warn';
-      $('diagChatTitle').textContent = d.bot.chatError || 'Group: Not checked';
+      setCheck('diagChatRow', 'diagChatDot', 'diagChatTitle', 'err', d.bot.chatError || 'Group not found — check the Group ID');
+      setCheck('diagAdminRow', 'diagAdminDot', 'diagAdminTitle', '', 'Not checked');
+      setCheck('diagInviteRow', 'diagInviteDot', 'diagInviteTitle', '', 'Not checked');
     }
   } else {
-    $('diagBotDot').className = 'live-dot';
-    $('diagBotTitle').textContent = (d.bot && d.bot.error) ? 'Bot: ' + d.bot.error : 'Bot: Not connected';
+    setCheck('diagBotRow', 'diagBotDot', 'diagBotTitle', (d.bot && d.bot.error) ? 'err' : 'warn', (d.bot && d.bot.error) ? d.bot.error : 'Not connected');
+    setCheck('diagChatRow', 'diagChatDot', 'diagChatTitle', '', 'Not checked');
+    setCheck('diagAdminRow', 'diagAdminDot', 'diagAdminTitle', '', 'Not checked');
+    setCheck('diagInviteRow', 'diagInviteDot', 'diagInviteTitle', '', 'Not checked');
   }
+
+  const intConnError = Boolean((d.bot && d.bot.error) || (d.bot && d.bot.connected && !d.bot.chat));
+  $('intConnPill').textContent = botVerified ? 'Connected' : intConnError ? 'Error' : 'Not connected';
+  $('intConnPill').className = 'pill ' + (botVerified ? 'pill-green' : intConnError ? 'pill-red' : 'pill-amber');
+  $('intStep1State').textContent = (d.bot && d.bot.connected) ? 'Set' : 'Not set';
+  $('intStep1State').className = 'int-state' + ((d.bot && d.bot.connected) ? ' ok' : '');
+  $('intStep2State').textContent = (d.bot && d.bot.chat) ? d.bot.chat.title : 'Not set';
+  $('intStep2State').className = 'int-state' + ((d.bot && d.bot.chat) ? ' ok' : '');
+  $('intStep3State').textContent = (d.bot && d.bot.chat) ? 'Checked' : 'Not checked';
+  $('intStep3State').className = 'int-state' + ((d.bot && d.bot.chat) ? ' ok' : '');
+  $('intStep4State').textContent = botVerified ? 'Ready' : 'Locked until verified';
+  $('intStep4State').className = 'int-state' + (botVerified ? ' ok' : ' locked');
+  $('intStep4Block').classList.toggle('locked', !botVerified);
+  updateIntStepper(d);
 
   if (d.mtproto && d.mtproto.connected) {
     if (d.mtproto.accounts && d.mtproto.accounts.length > 1) {
@@ -2623,6 +2904,26 @@ async function testConnections() {
     $('diagMtTitle').textContent = (d.mtproto && d.mtproto.error) ? d.mtproto.error : 'Account: Not signed in';
   }
   refreshStatus(false);
+  } finally { verifyInFlight = false; }
+}
+
+function updateIntStepper(d) {
+  const botOk = Boolean(d.bot && d.bot.connected);
+  const chatOk = Boolean(d.bot && d.bot.chat);
+  const adminOk = Boolean(d.bot && d.bot.chat && d.bot.chat.isAdmin);
+  const steps = [
+    { id: 'intStep1', done: botOk, current: !botOk },
+    { id: 'intStep2', done: chatOk, current: botOk && !chatOk },
+    { id: 'intStep3', done: adminOk, current: chatOk && !adminOk },
+    { id: 'intStep4', done: false, current: botVerified },
+  ];
+  steps.forEach((s, i) => {
+    const el = $(s.id);
+    el.classList.toggle('done', s.done);
+    el.classList.toggle('current', s.current);
+    const ico = el.querySelector('.step-ico');
+    if (ico) ico.textContent = s.done ? '✓' : String(i + 1);
+  });
 }
 
 async function togglePolling() {
@@ -2631,6 +2932,7 @@ async function togglePolling() {
   const data = await res.json();
   if (!res.ok) return toast(data.error, 'err');
   toast(data.pollingEnabled ? 'Local Listener enabled!' : 'Local Listener paused', 'ok');
+  if (data.pollingEnabled) lastWebhookUrl = '';
   refreshStatus(false);
 }
 
@@ -2646,17 +2948,62 @@ async function syncNow() {
   } catch (err) {
     toast(err.message, 'err');
   } finally {
-    btn.disabled = false;
+    btn.disabled = !botVerified;
   }
 }
 
 async function setWebhook() {
+  // First click reveals the URL field inside the Webhook card; second click (or Set Webhook) submits it.
+  const wrap = $('webhookUrlWrap');
+  if (wrap.hidden) {
+    wrap.hidden = false;
+    $('cfgWebhookUrl').focus();
+    return;
+  }
   const url = $('cfgWebhookUrl').value.trim();
+  if (!url) {
+    $('cfgWebhookUrl').focus();
+    return toast('Add your webhook URL first', 'err');
+  }
   const res = await fetch('/api/telegram/webhook-setup', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ url }) });
   const data = await res.json();
   if (!res.ok) return toast(data.error, 'err');
   toast('Webhook configured!', 'ok');
   testConnections();
+}
+
+function toggleBotToken() {
+  const input = $('cfgBotToken');
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  $('cfgTokenToggle').textContent = show ? 'Hide' : 'Show';
+}
+
+async function sendTestInvite() {
+  const btn = $('intTestBtn');
+  const box = $('intTestOut');
+  btn.disabled = true;
+  box.className = 'result-box show';
+  box.textContent = 'Creating a real test invite link…';
+  try {
+    const res = await fetch('/api/option1/create-link', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ label: 'Test Invite', mode: 'join_request', expireHours: 168 }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Connect Bot in Integrate Telegram first');
+    box.className = 'result-box show ok';
+    box.innerHTML = '<b>Test invite link ready:</b> <span style="word-break:break-all">' + esc(data.inviteLink) + '</span> <button type="button" class="btn btn-sm" data-copy="' + esc(data.inviteLink) + '" onclick="copyFromBtn(this)">Copy Link</button>';
+    toast('Test invite link created!', 'ok');
+    refreshStatus(false);
+  } catch (err) {
+    box.className = 'result-box show err';
+    box.textContent = err.message;
+    toast(err.message, 'err');
+  } finally {
+    btn.disabled = !botVerified;
+  }
 }
 
 async function mtSendCode() {
@@ -2751,8 +3098,17 @@ function closeLegalModal() {
   $('legalModal').classList.remove('open');
 }
 
+function openIntHelp() {
+  $('intHelpModal').classList.add('open');
+}
+
+function closeIntHelp() {
+  $('intHelpModal').classList.remove('open');
+}
+
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && $('legalModal').classList.contains('open')) closeLegalModal();
+  if (e.key === 'Escape' && $('intHelpModal').classList.contains('open')) closeIntHelp();
 });
 
 try {
