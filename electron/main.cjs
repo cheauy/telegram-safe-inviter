@@ -26,6 +26,7 @@
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 const { app, BrowserWindow, dialog, ipcMain, Menu } = require('electron');
 
 // electron-updater is a runtime dependency (see package.json). It is
@@ -278,7 +279,11 @@ function probeServer(port) {
 async function ensureServer(port) {
   if (await probeServer(port)) return; // Reuse the running server.
 
-  const serverModule = await import(serverEntry);
+  // Node's ESM loader rejects a bare Windows path (e.g. "C:\...") with
+  // "Received protocol 'c:'" — it needs a file:// URL. pathToFileURL()
+  // produces file:///C:/... on Windows and file:///... on POSIX, so the
+  // same code works on both.
+  const serverModule = await import(pathToFileURL(serverEntry).href);
   httpServer = serverModule.createServer();
   await new Promise((resolve, reject) => {
     httpServer.once('error', reject);
