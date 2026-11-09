@@ -616,6 +616,15 @@ export const UI_HTML = `<!DOCTYPE html>
     gap:8px;align-items:center;flex-wrap:wrap;
   }
   .group-add-drawer.open{display:flex;animation:fadeSlide .18s var(--ease)}
+  /* Group bar moved into the left menu: vertical card, full-width controls */
+  .side-group{padding:0 12px 12px}
+  .sidebar .group-bar{flex-direction:column;align-items:stretch;margin:0;padding:12px;gap:10px;box-shadow:none}
+  .sidebar .group-profile{min-width:0;flex:none}
+  .sidebar .group-name{max-width:170px}
+  .sidebar .group-controls{flex-direction:column;align-items:stretch}
+  .sidebar .group-select{min-width:0;max-width:none;width:100%}
+  .sidebar .group-add-drawer{padding-top:10px}
+  body.side-collapsed .side-group{display:none}
 
   /* VIP Expiry Controls */
   .vip-box{
@@ -687,6 +696,8 @@ export const UI_HTML = `<!DOCTYPE html>
   .legal-body{padding:20px;display:grid;gap:12px;font-size:13px;color:var(--text-2);line-height:1.6;max-height:65vh;overflow-y:auto}
   .legal-body p b{color:var(--text)}
   .legal-foot{padding:13px 20px;border-top:1px solid var(--line);background:var(--canvas);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
+  .help-steps{margin:0;padding-left:20px;display:grid;gap:10px;font-size:13px;color:var(--text-2);line-height:1.55}
+  .help-steps li b{color:var(--text)}
 
   .toasts{position:fixed;bottom:56px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:70;max-width:360px}
   .toast{padding:11px 15px;border-radius:10px;background:#0f172a;color:#fff;font-size:13px;font-weight:500;box-shadow:0 10px 28px rgba(15,23,42,.22);animation:toastPop .2s var(--ease)}
@@ -713,6 +724,7 @@ export const UI_HTML = `<!DOCTYPE html>
     .sidebar .user-meta{display:none}
     .sidebar .logout-btn{position:relative;width:46px;height:40px;padding:0}
     .sidebar .logout-btn span.lbl{display:none}
+    .sidebar .side-group{display:none}
     .site-footer{padding:8px 14px;flex-wrap:wrap;justify-content:center;gap:4px 12px}
     .toasts{bottom:74px}
   }
@@ -846,44 +858,8 @@ export const UI_HTML = `<!DOCTYPE html>
       </button>
     </nav>
 
-    <div class="side-foot">
-      <div class="user-box" id="userBox">
-        <div class="user-av" id="userAvatar">U</div>
-        <div class="user-meta">
-          <div class="user-name" id="userNameLabel">Account</div>
-          <div class="user-email" id="userEmailLabel">Saved workspace</div>
-        </div>
-      </div>
-      <button class="btn btn-sm btn-full logout-btn" id="logoutBtn" type="button" data-tip="Sign Out" onclick="logout()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        <span class="lbl">Sign Out</span>
-      </button>
-    </div>
-  </aside>
-
-  <!-- RIGHT MAIN CONTENT -->
-  <div class="main-col">
-    <header class="topbar">
-      <div class="top-left">
-        <h2 class="top-title" id="topMenuTitle">Option 1 · Safe Invite Link</h2>
-      </div>
-      <div class="top-actions">
-        <div class="sync-pill" id="syncPill">
-          <span class="live-dot" id="syncDot"></span>
-          <span id="syncLabel">Listener Off</span>
-        </div>
-        <button class="btn btn-sm" id="syncBtn" type="button" onclick="syncNow()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-          Sync Events
-        </button>
-        <button class="btn btn-sm btn-primary" type="button" onclick="openMenu('integrate')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Telegram Setup
-        </button>
-      </div>
-    </header>
-
-    <main class="workspace">
+    <div class="side-group" id="sideGroupWrap">
+      <div class="nav-group-label">Group</div>
       <!-- ============ SAVED GROUPS / CHANNELS PROFILE DROPDOWN ============ -->
       <div class="group-bar" id="groupProfileBar">
         <div class="group-profile">
@@ -920,6 +896,45 @@ export const UI_HTML = `<!DOCTYPE html>
         </div>
       </div>
 
+    </div>
+    <div class="side-foot">
+      <div class="user-box" id="userBox">
+        <div class="user-av" id="userAvatar">U</div>
+        <div class="user-meta">
+          <div class="user-name" id="userNameLabel">Account</div>
+          <div class="user-email" id="userEmailLabel">Saved workspace</div>
+        </div>
+      </div>
+      <button class="btn btn-sm btn-full logout-btn" id="logoutBtn" type="button" data-tip="Sign Out" onclick="logout()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span class="lbl">Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- RIGHT MAIN CONTENT -->
+  <div class="main-col">
+    <header class="topbar">
+      <div class="top-left">
+        <h2 class="top-title" id="topMenuTitle">Option 1 · Safe Invite Link</h2>
+      </div>
+      <div class="top-actions">
+        <div class="sync-pill" id="syncPill">
+          <span class="live-dot" id="syncDot"></span>
+          <span id="syncLabel">Listener Off</span>
+        </div>
+        <button class="btn btn-sm" id="syncBtn" type="button" onclick="syncNow()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          Sync Events
+        </button>
+        <button class="btn btn-sm btn-primary" id="setupBtn" type="button" onclick="openMenu('integrate')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Telegram Setup
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
       <!-- ============ PAGE 1: OPTION 1 ONLY ============ -->
       <section id="menu-option1" class="panel-anim">
         <div class="focus-grid">
@@ -1451,6 +1466,7 @@ export const UI_HTML = `<!DOCTYPE html>
                 </div>
                 <h3 class="card-title">Bot &amp; Group Connection</h3>
                 <span class="pill pill-amber" id="intConnPill">Not connected</span>
+                <button class="btn btn-sm" type="button" id="intHelpBtn" onclick="openIntHelp()" style="margin-left:auto" aria-label="Help: how to set up your bot and group">? Help</button>
               </div>
               <form class="card-body" onsubmit="saveBotConfig(event)">
 
@@ -1699,6 +1715,31 @@ export const UI_HTML = `<!DOCTYPE html>
   </div>
 </div>
 
+<!-- ============ INTEGRATE HELP MODAL ============ -->
+<div class="legal-overlay" id="intHelpModal" onclick="if(event.target===this)closeIntHelp()">
+  <div class="legal-card" role="dialog" aria-modal="true" aria-labelledby="intHelpTitle">
+    <div class="legal-head">
+      <h2 id="intHelpTitle">Bot &amp; Group Setup</h2>
+      <button type="button" class="legal-close" onclick="closeIntHelp()" aria-label="Close help">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="legal-body">
+      <ol class="help-steps">
+        <li><b>Make a bot</b> — @BotFather &rarr; /newbot &rarr; copy the Bot Token</li>
+        <li><b>Make a group</b> — New Group, add the bot + 1 friend, make the bot Admin (Invite Users on)</li>
+        <li><b>Get the Group ID</b> — add @userinfobot to the group, send hi, copy the -100... number</li>
+        <li><b>Verify</b> — paste Bot Token + Group ID here &rarr; Save &amp; Verify Bot &rarr; checks turn green</li>
+        <li><b>Test</b> — Send Test Invite Link &rarr; open it with a second account &rarr; join request auto-approves</li>
+      </ol>
+    </div>
+    <div class="legal-foot">
+      <span>Bot Token is secret — never share it.</span>
+      <button type="button" class="btn btn-sm btn-primary" onclick="closeIntHelp()">Close</button>
+    </div>
+  </div>
+</div>
+
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <script>
@@ -1880,6 +1921,11 @@ function openMenu(name) {
     btn.classList.toggle('active', btn.dataset.menu === name);
   });
   $('topMenuTitle').textContent = MENU_META[name] || MENU_META.option1;
+  // The two topbar buttons live in the shared topbar: hide them on this
+  // page only (the setup button just re-opens this page); other views keep them.
+  const onIntegrate = name === 'integrate';
+  if ($('syncBtn')) $('syncBtn').style.display = onIntegrate ? 'none' : '';
+  if ($('setupBtn')) $('setupBtn').style.display = onIntegrate ? 'none' : '';
 }
 
 function openStatusFilter(filter) {
@@ -3049,8 +3095,17 @@ function closeLegalModal() {
   $('legalModal').classList.remove('open');
 }
 
+function openIntHelp() {
+  $('intHelpModal').classList.add('open');
+}
+
+function closeIntHelp() {
+  $('intHelpModal').classList.remove('open');
+}
+
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && $('legalModal').classList.contains('open')) closeLegalModal();
+  if (e.key === 'Escape' && $('intHelpModal').classList.contains('open')) closeIntHelp();
 });
 
 try {
